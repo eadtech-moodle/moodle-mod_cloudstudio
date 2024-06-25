@@ -28,7 +28,7 @@
                 <INDEX NAME="autoplay" UNIQUE="false" FIELDS="autoplay"/>
             </INDEXES>
         </TABLE>
-        <TABLE NAME="cloudstudio_view" COMMENT="Save student Video views (Youtube/Vimeo/Google Drive/Upload).">
+        <TABLE NAME="cloudstudio_view" COMMENT="Save student Video views.">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="cm_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

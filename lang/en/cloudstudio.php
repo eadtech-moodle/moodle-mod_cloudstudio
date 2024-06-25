@@ -30,25 +30,12 @@ $string['dnduploadlabel-mp3'] = 'Adicionar Áudio com o Cloud Studio';
 $string['dnduploadlabel-mp4'] = 'Adicionar Vídeo com o Cloud Studio';
 $string['dnduploadlabeltext'] = 'Adicionar vídeo com o Cloud Studio';
 
-$string['videourl'] = 'Identificador do Cloud Studio, link do Youtube, link do Vimeo, link do Google Drive, Link externo com extensão MP4/MP3/M3U8/WebM ou um arquivo MP4/MP3/WebM';
-$string['videourl_help'] = '<h4>Youtube</h4>
-<div>Adicione uma URL do Youtube que voc&ecirc; deseja adicionar ao curso:</div>
-<div><strong>Ex:</strong> https://www.youtube.com/watch?v=SNhUMChfolc</div>
-<div><strong>Ex:</strong> https://youtu.be/kwjhXQUpyvA</div>
-<h4>Google Drive</h4>
-<div>No Google Drive, clique em compartilhar v&iacute;deo e defina as permiss&otilde;es e cole o link aqui.</div>
-<h4>Vimeo</h4>
-<div>Adicione uma URL do Vimeo que voc&ecirc; deseja adicionar ao curso:</div>
-<div><strong>Ex:</strong> https://vimeo.com/300138942</div>
-<h4>Vídeo ou áudio externo</h4>
-<div>Adicione uma URL de um vídeo que você tem hospedado em seu próprio servidor, com extensão MP3 ou MP4:</div>
-<div><strong>Ex:</strong> https://host.com.br/file/video.mp4</div>
-<div><strong>Ex:</strong> https://host.com.br/file/video.mp3</div>';
+$string['videourl'] = 'Identificador do Cloud Studio ou um arquivo MP4/MP3/WebM';
 $string['videourl_error'] = 'URL do Cloud Studio';
 $string['videofile'] = 'Ou selecione um arquivo MP3, MP4 ou WebM';
 $string['videofile_help'] = 'Você pode fazer upload de um arquivo MP3 ou MP4, hospeda-lo na MoodleData e mostrar no player do Cloud Studio';
 $string['pluginadministration'] = 'Cloud Studio';
-$string['modulename_help'] = 'Este módulo adiciona um Vídeos Youtube, Google Drive ou Vimeo dentro do Moodle.';
+$string['modulename_help'] = 'Este módulo adiciona um Vídeos do Cloud Studio dentro do Moodle.';
 
 $string['urlcloudstidio'] = 'URL do Cloud Studio';
 $string['urlcloudstidio_desc'] = 'Insira a URL do Cloud Studio. Esta URL é necessária para conectar seu site ao serviço de Cloud Studio e possibilitar a integração dos recursos.';
@@ -67,7 +54,7 @@ $string['playersize'] = 'Tamanho do Player';
 $string['record_kapture'] = 'Grave seu vídeo com Kapture';
 $string['select_cloudstudio'] = 'Selecione um vídeo do Cloud Studio';
 
-$string['idnotfound'] = 'Link não reconhecido como Youtube, Google Drive ou Vimeo';
+$string['idnotfound'] = 'Link não reconhecido como Cloud Studio';
 $string['seu_mapa_view'] = 'Seu mapa de Visualização:';
 $string['seu_mapa_ir_para'] = 'Ir para {$a}';
 

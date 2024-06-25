@@ -39,8 +39,6 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render", "core/str"], fun
 
             mod_form.upload_file(engine);
 
-            mod_form.loadposter(lang);
-
             console.log(courseSection);
             if (courseSection) {
                 $("#id_generalcontainer").before(`
@@ -118,7 +116,6 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render", "core/str"], fun
 
         validateUrl : function(url) {
             if (mod_form.testUrlResource(url)) {
-                // console.log("testUrlYouTube");
                 mod_form.fitem_id_videofile.show();
                 mod_form.fitem_id_playersize.hide();
 
@@ -127,46 +124,12 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render", "core/str"], fun
 
                 mod_form.id_videourl.prop("readonly", true);
 
-            } else if (mod_form.testUrlYouTube(url)) {
-                // console.log("testUrlYouTube");
-                mod_form.fitem_id_videofile.hide();
-                mod_form.fitem_id_playersize.show();
-                mod_form.fitem_id_playersize.find("option").show();
-                mod_form.fitem_id_playersize.find("[value=5]").hide();
-                mod_form.fitem_id_playersize.find("[value=4x3]").hide();
-                mod_form.fitem_id_playersize.find("[value=16x9]").hide();
-                mod_form.fitem_id_playersize.val(1);
-
-                mod_form.fitem_id_showcontrols && mod_form.fitem_id_showcontrols.show();
-                mod_form.fitem_id_autoplay && mod_form.fitem_id_autoplay.show();
-
-            } else if (mod_form.testUrlVimeo(url)) {
-                console.log("testUrlVimeo");
+            } else if (type = mod_form.testCloudStudio(url)) {
                 mod_form.fitem_id_videofile.hide();
                 mod_form.fitem_id_playersize.hide();
 
                 mod_form.fitem_id_showcontrols && mod_form.fitem_id_showcontrols.show();
-                mod_form.fitem_id_autoplay && mod_form.fitem_id_autoplay.show();
-
-            } else if (mod_form.testUrlDrive(url)) {
-                console.log("testUrlDrive");
-                mod_form.fitem_id_videofile.hide();
-                mod_form.fitem_id_playersize.show();
-                mod_form.fitem_id_playersize.find("option").hide();
-                mod_form.fitem_id_playersize.find("[value=5]").show();
-                mod_form.fitem_id_playersize.find("[value=4x3]").show();
-                mod_form.fitem_id_playersize.find("[value=16x9]").show();
-                mod_form.fitem_id_playersize.val(7);
-
-                mod_form.fitem_id_showcontrols && mod_form.fitem_id_showcontrols.hide();
                 mod_form.fitem_id_autoplay && mod_form.fitem_id_autoplay.hide();
-            } else if (type = mod_form.testUrlExternalFile(url)) {
-                mod_form.fitem_id_videofile.hide();
-                mod_form.fitem_id_playersize.hide();
-
-                mod_form.fitem_id_showcontrols && mod_form.fitem_id_showcontrols.hide();
-                mod_form.fitem_id_autoplay && mod_form.fitem_id_autoplay.show();
-
             } else {
                 console.log("else");
                 mod_form.fitem_id_videofile.show();
@@ -179,28 +142,22 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render", "core/str"], fun
             }
         },
 
-        testUrlResource     : function(url) {
+        testCloudStudio : function(url) {
+            var re1 = /^[A-Z_\-]{5,150}$/;
+            var matches1 = re1.exec(url);
+            if (matches1 && matches1[1]) {
+                return true;
+            }
+
+            var re2 = /\/\w+\/\w+\/([A-Z0-9\-\_]{3,255})/;
+            var matches2 = re2.exec(url);
+            if (matches2 && matches2[1]) {
+                return true;
+            }
+        },
+
+        testUrlResource : function(url) {
             var re = /(\[resource-file:).*/i;
-            var matches = re.exec(url);
-            return matches && matches[1];
-        },
-        testUrlYouTube      : function(url) {
-            var re = /\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/|live\/|shorts\/)?([a-z0-9_\-]+)/i;
-            var matches = re.exec(url);
-            return matches && matches[1];
-        },
-        testUrlVimeo        : function(url) {
-            var re = /\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i;
-            var matches = re.exec(url);
-            return matches && matches[1];
-        },
-        testUrlDrive        : function(url) {
-            var re = /https:\/\/(docs.google.com)\//i;
-            var matches = re.exec(url);
-            return matches && matches[1];
-        },
-        testUrlExternalFile : function(url) {
-            var re = /^https?.*\.(mp3|mp4|m3u8|webm)/i;
             var matches = re.exec(url);
             return matches && matches[1];
         },
@@ -235,13 +192,6 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render", "core/str"], fun
             }
 
             return $("#id_" + fitem_id).parent();
-        },
-
-        loadposter : function(lang) {
-            mod_form.fitem_id_videourl.addClass("videourl_form_item_cloudstudio");
-
-            var playerRender = new PlayerRender();
-            playerRender.loadposter($, lang);
         }
     };
 });

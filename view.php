@@ -121,44 +121,6 @@ if ($parseurl->videoid) {
     if ($parseurl->engine == "cloudstudio") {
         die('Cloud Studio');
     }
-    else if ($parseurl->engine == "link") {
-
-        $controls = $cloudstudio->showcontrols ? "controls" : "";
-        $autoplay = $cloudstudio->autoplay ? "autoplay" : "";
-
-        echo "<div id='{$element_id}'></div>";
-        if ($parseurl->extra == "mp3") {
-            $PAGE->requires->js_call_amd('mod_cloudstudio/player_create', 'resource_audio', [
-                (int)$cloudstudioview->id,
-                $cloudstudioview->currenttime,
-                $element_id,
-                $parseurl->videoid,
-                $cloudstudio->autoplay ? true : false,
-                $cloudstudio->showcontrols ? true : false,
-            ]);
-        } else {
-            $PAGE->requires->js_call_amd('mod_cloudstudio/player_create', 'resource_video', [
-                (int)$cloudstudioview->id,
-                $cloudstudioview->currenttime,
-                $element_id,
-                $parseurl->videoid,
-                $cloudstudio->autoplay ? 1 : 0,
-                $cloudstudio->showcontrols ? true : false,
-            ]);
-        }
-    }
-    else if ($parseurl->engine == "ottflix") {
-        echo "<div id='{$element_id}'></div>";
-
-        $PAGE->requires->js_call_amd('mod_cloudstudio/player_create', 'ottflix', [
-            (int)$cloudstudioview->id,
-            $cloudstudioview->currenttime,
-            "{$parseurl->engine}-{$uniqueid}",
-            $parseurl->videoid
-        ]);
-
-        echo $OUTPUT->render_from_template('mod_cloudstudio/embed_ottflix', ['identifier' => $parseurl->videoid]);
-    }
     else if ($parseurl->engine == "resource") {
         $files = get_file_storage()->get_area_files(
             $context->id, 'mod_cloudstudio', 'content', $cloudstudio->id, 'sortorder DESC, id ASC', false);
@@ -201,68 +163,6 @@ if ($parseurl->videoid) {
             $notification->set_show_closebutton(false);
             echo \html_writer::span($PAGE->get_renderer('core')->render($notification));
         }
-    }
-    else if ($parseurl->engine == "youtube") {
-        echo "<script src='https://www.youtube.com/iframe_api'></script>";
-        echo "<div id='{$element_id}'></div>";
-
-        $PAGE->requires->js_call_amd('mod_cloudstudio/player_create', 'youtube', [
-            (int)$cloudstudioview->id,
-            $cloudstudioview->currenttime,
-            "{$parseurl->engine}-{$uniqueid}",
-            $parseurl->videoid,
-            $cloudstudio->playersize,
-            $cloudstudio->showcontrols ? 1 : 0,
-            $cloudstudio->autoplay ? 1 : 0
-        ]);
-    }
-    else if ($parseurl->engine == "google-drive") {
-        $parametersdrive = implode('&amp;', [
-            $cloudstudio->showcontrols ? 'controls=1' : 'controls=0',
-            $cloudstudio->autoplay ? 'autoplay=1' : 'autoplay=0'
-        ]);
-        echo "<iframe id='{$parseurl->engine}-{$uniqueid}' width='100%' height='680'
-                      frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen
-                      allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-                      sandbox='allow-scripts allow-forms allow-same-origin allow-modals'
-                      src='https://drive.google.com/file/d/{$parseurl->videoid}/preview?{$parametersdrive}'></iframe>";
-
-        $PAGE->requires->js_call_amd('mod_cloudstudio/player_create', 'drive', [
-            (int)$cloudstudioview->id,
-            "{$parseurl->engine}-{$uniqueid}",
-            $cloudstudio->playersize
-        ]);
-
-        $config->showmapa = false;
-    }
-    else if ($parseurl->engine == "vimeo") {
-        $parametersvimeo = implode('&amp;', [
-            'pip=1',
-            'title=0',
-            'byline=0',
-            $cloudstudio->showcontrols ? 'title=1' : 'title=0',
-            $cloudstudio->autoplay ? 'autoplay=1' : 'autoplay=0',
-            $cloudstudio->showcontrols ? 'controls=1' : 'controls=0',
-        ]);
-
-        if (strpos($parseurl->videoid, "?")) {
-            $url = "{$parseurl->videoid}&pip{$parametersvimeo}";
-        } else {
-            $url = "{$parseurl->videoid}?pip{$parametersvimeo}";
-        }
-
-        echo $OUTPUT->render_from_template('mod_cloudstudio/embed_vimeo', [
-            'html_id' => "{$parseurl->engine}-{$uniqueid}",
-            'vimeo_url' => $url,
-            'parametersvimeo' => $parametersvimeo,
-        ]);
-
-        $PAGE->requires->js_call_amd('mod_cloudstudio/player_create', 'vimeo', [
-            $cloudstudioview->id,
-            $cloudstudioview->currenttime,
-            $parseurl->videoid,
-            "{$parseurl->engine}-{$uniqueid}"
-        ]);
     }
 
     $text = $OUTPUT->heading(get_string('seu_mapa_view', 'mod_cloudstudio') . ' <span></span>', 3, 'main-view', 'seu-mapa-view');

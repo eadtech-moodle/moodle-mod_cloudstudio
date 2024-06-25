@@ -564,9 +564,6 @@ a.plyr__control {
 .plyr--stopped.plyr__poster-enabled .plyr__poster {
     opacity: 1
 }
-.plyr--youtube.plyr--paused.plyr__poster-enabled:not(.plyr--stopped) .plyr__poster {
-    display: none
-}
 .plyr__time {
     font-size: 13px;
     font-size: var(--plyr-font-size-time, var(--plyr-font-size-small, 13px))

@@ -16,72 +16,14 @@
 define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Ajax, PlayerRender) {
     return progress = {
 
-        ottflix : function(view_id, return_currenttime, elementId, videoid) {
+        cloudstudio : function(view_id, return_currenttime, elementId, videoid) {
             window.addEventListener('message', function receiveMessage(event) {
                 console.trace(event.data);
 
-                if (event.data.origem == 'OTTFLIX-player' && event.data.name == "progress") {
+                if (event.data.origem == 'CLOUDSTUDIO-player' && event.data.name == "progress") {
                     progress._internal_saveprogress(event.data.currentTime, event.data.duration);
                 }
             });
-        },
-
-        youtube : function(view_id, return_currenttime, elementId, videoid, playersize, showcontrols, autoplay) {
-
-            progress._internal_view_id = view_id;
-
-            var playerVars = {
-                rel         : 0,
-                controls    : showcontrols,
-                autoplay    : autoplay,
-                playsinline : 1,
-            };
-
-            if (return_currenttime) {
-                playerVars.start = return_currenttime;
-            }
-
-            if (YT && YT.Player) {
-                var player = new YT.Player(elementId, {
-                    suggestedQuality : 'large',
-                    videoId          : videoid,
-                    width            : '100%',
-                    playerVars       : playerVars,
-                    events           : {
-                        'onReady'       : function(event) {
-
-                            if (playersize == 1) {
-                                progress._internal_resize(16, 9);
-                            } else if (playersize == 2) {
-                                progress._internal_resize(4, 3);
-                            } else if (playersize.indexOf("x")) {
-                                var sizes = playersize.split("x");
-                                progress._internal_resize(sizes[0], sizes[1]);
-                            }
-
-                            progress._internal_max_height();
-                            document.addEventListener("setCurrentTime", function(event) {
-                                player.seekTo(event.detail.goCurrentTime);
-                            });
-                        },
-                        'onStateChange' : function(event) {
-                        }
-                    }
-                });
-            } else {
-                var html =
-                        '<div class="alert alert-danger">' +
-                        'Error loading the JavaScript at https://www.youtube.com/iframe_api. ' +
-                        'Please check for any Security Policy restrictions.' +
-                        '</div>';
-                $("#cloudstudio_area_embed").html(html);
-            }
-
-            setInterval(function() {
-                if (player && player.getCurrentTime != undefined) {
-                    progress._internal_saveprogress(player.getCurrentTime(), player.getDuration() - 1);
-                }
-            }, 150);
         },
 
         resource_audio : function(view_id, return_currenttime, elementId, fullurl, autoplay, showcontrols) {
@@ -192,67 +134,6 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
             setInterval(function() {
                 progress._internal_saveprogress(player.currentTime, player.duration);
             }, 200);
-        },
-
-        vimeo : function(view_id, return_currenttime, vimeoid, elementId) {
-
-            progress._internal_view_id = view_id;
-
-            var iframe = document.getElementById(elementId);
-            var player = new Vimeo.Player(iframe);
-
-            if (return_currenttime) {
-                player.setCurrentTime(return_currenttime);
-            }
-
-            document.addEventListener("setCurrentTime", function(event) {
-                player.setCurrentTime(event.detail.goCurrentTime);
-            });
-
-            Promise.all([player.getVideoWidth(), player.getVideoHeight()]).then(function(dimensions) {
-                var width = dimensions[0];
-                var height = dimensions[1];
-
-                progress._internal_resize(width, height);
-                progress._internal_max_height();
-            });
-
-            var duration = 0;
-            setInterval(function() {
-                if (duration > 1) {
-                    player.getCurrentTime().then(function(_currenttime) {
-                        _currenttime = parseInt(_currenttime);
-                        progress._internal_saveprogress(_currenttime, duration);
-                    });
-                } else {
-                    player.getDuration().then(function(_duration) {
-                        duration = _duration;
-                    });
-                }
-            }, 300);
-        },
-
-        drive : function(view_id, elementId, playersize) {
-
-            progress._internal_view_id = view_id;
-
-            progress._internal_saveprogress(1, 1);
-
-            if (playersize == 5) {
-                progress._internal_resize(480, 640);
-            } else if (playersize == 6) {
-                progress._internal_resize(4, 3);
-                progress._internal_max_height();
-            } else if (playersize == 7) {
-                progress._internal_resize(16, 9);
-                progress._internal_max_height();
-            } else if (playersize.indexOf("x")) {
-                var sizes = playersize.split("x");
-                progress._internal_resize(sizes[0], sizes[1]);
-                progress._internal_max_height();
-            }
-
-            $("#mapa-visualizacao").hide();
         },
 
         _internal_resize : function(width, height) {
