@@ -28,14 +28,14 @@ $string['modulenameplural'] = 'Cloud Studio';
 
 $string['dnduploadlabel-mp3'] = 'Adicionar Áudio com o Cloud Studio';
 $string['dnduploadlabel-mp4'] = 'Adicionar Vídeo com o Cloud Studio';
-$string['dnduploadlabeltext'] = 'Adicionar vídeo com o Cloud Studio';
+$string['dnduploadlabeltext'] = 'Adicionar Vídeo com o Cloud Studio';
 
-$string['videourl'] = 'Identificador do Cloud Studio ou um arquivo MP4/MP3/WebM';
-$string['videourl_error'] = 'URL do Cloud Studio';
-$string['videofile'] = 'Ou selecione um arquivo MP3, MP4 ou WebM';
-$string['videofile_help'] = 'Você pode fazer upload de um arquivo MP3 ou MP4, hospeda-lo na MoodleData e mostrar no player do Cloud Studio';
+$string['identificador'] = 'Identificador do Cloud Studio';
+$string['identificador_error'] = 'Identificador do Cloud Studio';
 $string['pluginadministration'] = 'Cloud Studio';
 $string['modulename_help'] = 'Este módulo adiciona um Vídeos do Cloud Studio dentro do Moodle.';
+$string['loading'] = 'Carregando';
+$string['use_this_file'] = 'Usar este';
 
 $string['urlcloudstidio'] = 'URL do Cloud Studio';
 $string['urlcloudstidio_desc'] = 'Insira a URL do Cloud Studio. Esta URL é necessária para conectar seu site ao serviço de Cloud Studio e possibilitar a integração dos recursos.';
@@ -44,19 +44,25 @@ $string['tokencloudstidio_desc'] = 'Insira o TOKEN da API fornecido pelo Cloud S
 
 $string['showmapa'] = 'Mostrar Mapa';
 $string['showmapa_desc'] = 'Se marcado, mostra o mapa após o player do vídeo!';
-$string['showcontrols'] = 'Controles';
-$string['showcontrols_desc'] = 'Mostrar controles do player';
-$string['autoplay'] = 'Reproduzir automaticamente';
-$string['autoplay_desc'] = 'Reproduzir automaticamente ao carregar o player';
 $string['maxwidth'] = 'Largura Máxima para player de Vídeo';
 $string['maxwidth_desc'] = 'Largura máxima, em pixels, que o player de vídeo pode expandir. Valores inferiores a 500 pixels serão considerados.';
-$string['playersize'] = 'Tamanho do Player';
 $string['record_kapture'] = 'Grave seu vídeo com Kapture';
 $string['select_cloudstudio'] = 'Selecione um vídeo do Cloud Studio';
 
-$string['idnotfound'] = 'Link não reconhecido como Cloud Studio';
-$string['seu_mapa_view'] = 'Seu mapa de Visualização:';
-$string['seu_mapa_ir_para'] = 'Ir para {$a}';
+$string['livro'] = 'Mostrar livro, caso houver';
+$string['livro_desc'] = 'Habilite e permita ao aluno visualizar o livro, se disponível.';
+$string['mapamental'] = 'Mostrar Mapa mental, caso houver';
+$string['mapamental_desc'] = 'Habilite e permita ao aluno visualizar o mapa mental, se disponível.';
+
+
+$string['view_seu_mapa'] = 'Seu mapa de Visualização:';
+
+$string['view_ia_notfound'] = 'Não localizado';
+$string['view_livro'] = 'Livro';
+$string['view_mapamental'] = 'Mapa Mental';
+$string['view_sugestao'] = 'Sugestão de novos vídeos';
+$string['view_licao'] = 'Sugestão de Lições';
+$string['view_short'] = 'Sugestão de Shorts';
 
 $string['report_title'] = 'Relatório';
 $string['report'] = 'Relatório de visualizações';
@@ -107,6 +113,7 @@ $string['privacy:metadata:cloudstudio_view:mapa'] = '';
 $string['privacy:metadata:cloudstudio_view:timecreated'] = '';
 $string['privacy:metadata:cloudstudio_view:timemodified'] = '';
 
+// Kapture.
 $string['app_title'] = 'Módulo Cloud Studio Kapture';
 $string['logo_title'] = 'Logo';
 $string['selecionar_slide'] = 'Selecionar Slide';
@@ -154,3 +161,6 @@ $string['ottflix'] = 'Módulo Cloud Studio';
 $string['falha_upload_ottflix'] = 'Falha no Upload para o Módulo Cloud Studio';
 $string['abortado_upload_ottflix'] = 'Upload para o Módulo Cloud Studio foi abortado!';
 $string['error_accessing_camera'] = 'Error accessing camera or capturing screen';
+
+
+

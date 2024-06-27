@@ -17,9 +17,9 @@
 /**
  * Report for cloudstudio.
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once('../../config.php');
@@ -28,8 +28,8 @@ require_once($CFG->libdir . '/tablelib.php');
 $id = optional_param('id', 0, PARAM_INT);
 $userid = optional_param('u', false, PARAM_INT);
 $cm = get_coursemodule_from_id('cloudstudio', $id, 0, false, MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$cloudstudio = $DB->get_record('cloudstudio', array('id' => $cm->instance), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+$cloudstudio = $DB->get_record('cloudstudio', ['id' => $cm->instance], '*', MUST_EXIST);
 
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
@@ -42,7 +42,7 @@ if (!has_capability('moodle/course:manageactivities', $context, $USER)) {
 $table = new \mod_cloudstudio\report\cloudstudio_view("cloudstudio_report", $cm->id, $userid, $cloudstudio);
 
 if (!$table->is_downloading()) {
-    $PAGE->set_url('/mod/cloudstudio/report.php', array('id' => $cm->id));
+    $PAGE->set_url('/mod/cloudstudio/report.php', ['id' => $cm->id]);
     $PAGE->requires->css('/mod/cloudstudio/style.css');
     $PAGE->set_title("{$course->shortname}: {$cloudstudio->name}");
     $PAGE->set_heading($course->fullname);

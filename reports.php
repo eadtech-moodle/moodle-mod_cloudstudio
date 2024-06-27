@@ -17,20 +17,20 @@
 /**
  * Report for cloudstudio.
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once('../../config.php');
 require_once($CFG->libdir . '/tablelib.php');
 
 $courseid = optional_param('course', 0, PARAM_INT);
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
 require_course_login($course);
 
-$PAGE->set_url('/mod/cloudstudio/reports.php', array('course' => $courseid));
+$PAGE->set_url('/mod/cloudstudio/reports.php', ['course' => $courseid]);
 $PAGE->set_title("{$course->shortname}: " . get_string('reports'));
 $PAGE->set_heading($course->fullname . ": " . get_string('modulename', 'mod_cloudstudio'));
 echo $OUTPUT->header();

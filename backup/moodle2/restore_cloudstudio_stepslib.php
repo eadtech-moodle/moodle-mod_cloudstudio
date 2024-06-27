@@ -17,19 +17,19 @@
 /**
  * Backup files
  *
- * @package    mod_cloudstudio
+ * @package   mod_cloudstudio
  * @category   backup
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    https://www.eduardokraus.com/
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   https://www.eduardokraus.com/
  */
 
 /**
  * Structure step to restore one cloudstudio activity
  *
- * @package    mod_cloudstudio
+ * @package   mod_cloudstudio
  * @category   backup
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    https://www.eduardokraus.com/
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   https://www.eduardokraus.com/
  */
 class restore_cloudstudio_activity_structure_step extends restore_activity_structure_step {
 
@@ -40,7 +40,7 @@ class restore_cloudstudio_activity_structure_step extends restore_activity_struc
      */
     protected function define_structure() {
 
-        $paths = array();
+        $paths = [];
         $paths[] = new restore_path_element('cloudstudio', '/activity/cloudstudio');
 
         // Return the paths wrapped into standard activity structure.

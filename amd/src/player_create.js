@@ -16,7 +16,7 @@
 define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Ajax, PlayerRender) {
     return progress = {
 
-        cloudstudio : function(view_id, return_currenttime, elementId, videoid) {
+        cloudstudio : function(view_id, return_currenttime, elementId, identificador) {
             window.addEventListener('message', function receiveMessage(event) {
                 console.trace(event.data);
 
@@ -24,116 +24,6 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
                     progress._internal_saveprogress(event.data.currentTime, event.data.duration);
                 }
             });
-        },
-
-        resource_audio : function(view_id, return_currenttime, elementId, fullurl, autoplay, showcontrols) {
-
-            progress._internal_view_id = view_id;
-
-            var embedparameters = "";
-            if (showcontrols) embedparameters += "controls ";
-            if (autoplay) embedparameters += "autoplay ";
-
-            var embed =
-                    "<audio " + embedparameters + " crossorigin playsinline >" +
-                    "    <source src='" + fullurl + "' type='audio/mp3'>" +
-                    "</audio>";
-            $("#" + elementId).html(embed);
-
-            var config = {
-                controls :
-                    showcontrols ? [
-                        'play', 'progress', 'current-time', 'mute', 'volume', 'pip', 'airplay', 'duration'
-                    ] : [
-                        'play'
-                    ],
-                tooltips : {controls : showcontrols, seek : showcontrols},
-                settings : ['speed', 'loop'],
-                autoplay : autoplay ? true : false,
-                storage  : {enabled : true, key : "id-" + view_id},
-                speed    : {selected : 1, options : [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4]},
-                seekTime : parseInt(return_currenttime) ? parseInt(return_currenttime) : 0,
-            };
-            var player = new PlayerRender("#" + elementId + " audio", config);
-            player.on("ready", function() {
-                if (return_currenttime) {
-                    player.currentTime = parseInt(return_currenttime);
-                    setTimeout(function() {
-                        player.currentTime = parseInt(return_currenttime);
-                    }, 1000);
-
-                    if (!autoplay) {
-                        player.pause();
-                    }
-                }
-            });
-
-            document.addEventListener("setCurrentTime", function(event) {
-                player.currentTime = event.detail.goCurrentTime;
-            });
-
-            setInterval(function() {
-                progress._internal_saveprogress(player.currentTime, player.duration);
-            }, 200);
-        },
-
-        resource_video : function(view_id, return_currenttime, elementId, fullurl, autoplay, showcontrols) {
-
-            progress._internal_view_id = view_id;
-
-            var embedparameters = "";
-            if (showcontrols) embedparameters += "controls ";
-            if (autoplay) embedparameters += "autoplay ";
-
-            var embed =
-                    "<video " + embedparameters + " crossorigin playsinline>" +
-                    "    <source src='" + fullurl + "'>" +
-                    "</video>";
-            $("#" + elementId).html(embed);
-
-            var config = {
-                controls :
-                    showcontrols ? [
-                        'play-large', 'play', 'current-time', 'progress', 'duration', 'mute', 'volume',
-                        'settings', 'pip', 'airplay', 'fullscreen'
-                    ] : [
-                        'play-large', 'play'
-                    ],
-                tooltips : {controls : showcontrols, seek : showcontrols},
-                settings : ['speed', 'loop'],
-                storage  : {enabled : true, key : "id-" + view_id},
-                speed    : {selected : 1, options : [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 4]},
-                // autoplay : autoplay ? 1 : 0,
-                seekTime : parseInt(return_currenttime) ? parseInt(return_currenttime) : 0,
-            };
-            var player = new PlayerRender("#" + elementId + " video", config);
-
-            player.on("ready", function() {
-                if (return_currenttime) {
-                    player.currentTime = parseInt(return_currenttime);
-                    setTimeout(function() {
-                        player.currentTime = parseInt(return_currenttime);
-                    }, 1000);
-
-                    if (!autoplay) {
-                        player.pause();
-                    }
-                }
-                progress._internal_max_height();
-            });
-
-            var video = document.getElementById(elementId);
-            video.addEventListener("loadedmetadata", function(event) {
-                progress._internal_max_height();
-            });
-
-            document.addEventListener("setCurrentTime", function(event) {
-                player.currentTime = event.detail.goCurrentTime;
-            });
-
-            setInterval(function() {
-                progress._internal_saveprogress(player.currentTime, player.duration);
-            }, 200);
         },
 
         _internal_resize : function(width, height) {

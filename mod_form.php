@@ -17,9 +17,9 @@
 /**
  * form file
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -30,7 +30,7 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
  * class mod_cloudstudio_mod_for
  *
  * @package   mod_cloudstudio
- * @copyright 2023 Eduardo kraus (http://eduardokraus.com)
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
  * @license   https://www.eduardokraus.com/
  */
 class mod_cloudstudio_mod_form extends moodleform_mod {
@@ -52,61 +52,38 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
         }
 
         $mform = $this->_form;
-        $mform->updateAttributes(array('enctype' => 'multipart/form-data'));
+        $mform->updateAttributes(['enctype' => 'multipart/form-data']);
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('text', 'name', get_string('name'), array('size' => '48'), array());
+        $mform->addElement('text', 'name', get_string('name'), ['size' => '48'], []);
         $mform->setType('name', !empty($CFG->formatstringstriptags) ? PARAM_TEXT : PARAM_CLEANHTML);
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // Digite a URL ou ID.
-        $mform->addElement('text', 'videourl',
-            get_string('videourl', 'mod_cloudstudio'), array('size' => '60'), []);
-        $mform->setType('videourl', PARAM_TEXT);
-        $mform->addRule('videourl', null, 'required', null, 'client');
-        $mform->addHelpButton('videourl', 'videourl', 'mod_cloudstudio');
+        $mform->addElement('text', 'identificador',
+            get_string('identificador', 'mod_cloudstudio'), ['size' => '60'], []);
+        $mform->setType('identificador', PARAM_TEXT);
+        $mform->addRule('identificador', null, 'required', null, 'client');
+        $mform->addHelpButton('identificador', 'identificador', 'mod_cloudstudio');
 
-        // Upload.
-        $mform->addElement('filepicker', 'videofile', get_string('videofile', 'mod_cloudstudio'), null,
-            ['accepted_types' => ['.mp3', '.mp4', '.webm'], 'maxbytes' => 0]);
-        $mform->addHelpButton('videofile', 'videofile', 'mod_cloudstudio');
+
+        $options = [
+            1 => get_string('yes'),
+            0 => get_string('no'),
+        ];
+        $mform->addElement('select', 'livro', get_string('livro', 'mod_cloudstudio'), $options);
+        $mform->addHelpButton('livro', 'livro', 'mod_cloudstudio');
+
+        $mform->addElement('select', 'mapamental', get_string('mapamental', 'mod_cloudstudio'), $options);
+        $mform->addHelpButton('mapamental', 'mapamental', 'mod_cloudstudio');
 
         // Adding the standard "intro" and "introformat" fields.
         if ($CFG->branch >= 29) {
             $this->standard_intro_elements();
         } else {
             $this->add_intro_editor();
-        }
-
-        $sizeoptions = array(
-            1 => 'Video HD (16x9)',
-            2 => 'Video ED (4x3)',
-
-            5 => 'PDF / DOC / XLS',
-            "4x3" => 'Video 4x3',
-            "16x9" => 'Video 16x9',
-        );
-        if ($cloudstudio && $cloudstudio->playersize != 0) {
-            if (!isset($sizeoptions[$cloudstudio->playersize])) {
-                $sizeoptions[$cloudstudio->playersize] = $cloudstudio->playersize;
-            }
-        }
-        $mform->addElement('select', 'playersize', get_string('playersize', 'mod_cloudstudio'), $sizeoptions);
-        $mform->setDefault('playersize', 1);
-        $mform->setType('playersize', PARAM_TEXT);
-
-        $config = get_config('cloudstudio');
-
-        if ($config->showcontrols <= 1) {
-            $mform->addElement('advcheckbox', 'showcontrols', get_string('showcontrols_desc', 'mod_cloudstudio'));
-            $mform->setDefault('showcontrols', $config->showcontrols);
-        }
-
-        if ($config->autoplay <= 1) {
-            $mform->addElement('advcheckbox', 'autoplay', get_string('autoplay_desc', 'mod_cloudstudio'));
-            $mform->setDefault('autoplay', $config->autoplay);
         }
 
         // Grade Element.
@@ -123,10 +100,6 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
         $mform->addHelpButton('gradecat', 'gradecategoryonmodform', 'grades');
         $mform->hideIf('gradecat', 'grade_approval', 'eq', '0');
 
-        $mform->addElement('text', 'gradepass', get_string('gradepass', 'grades'), ['size' => 4]);
-        $mform->addHelpButton('gradepass', 'gradepass', 'grades');
-        $mform->setType('gradepass', PARAM_INT);
-        $mform->hideIf('gradepass', 'grade_approval', 'eq', '0');
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
@@ -137,11 +110,6 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
         // Add standard buttons, common to all modules.
         $this->add_action_buttons();
 
-        $engine = "";
-        if ($cloudstudio) {
-            $urlparse = \mod_cloudstudio\util\url::parse($cloudstudio->videourl);
-            $engine = $urlparse->engine;
-        }
         $btn = false;
         if (!($this->_cm && $this->_cm->instance)) {
             $course = $this->optional_param('course', 0, PARAM_INT);
@@ -151,10 +119,8 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
             }
         }
         $PAGE->requires->strings_for_js(['record_kapture', 'select_cloudstudio'], 'cloudstudio');
-        $PAGE->requires->js_call_amd('mod_cloudstudio/mod_form', 'init', [$engine, $USER->lang, $btn]);
+        $PAGE->requires->js_call_amd('mod_cloudstudio/mod_form', 'init', [$btn]);
     }
-
-    // &videourl=[resource-file:undefined.webm]&videofile=716642258&sesskey=puL5iw2t3d
 
     /**
      * Set up the completion checkbox which is not part of standard data.
@@ -163,10 +129,6 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
      */
     public function data_preprocessing(&$defaultvalues) {
         parent::data_preprocessing($defaultvalues);
-
-        $draftitemid = file_get_submitted_draft_itemid('videofile');
-        file_prepare_draft_area($draftitemid, $this->context->id, 'mod_cloudstudio', 'content', $defaultvalues['id']);
-        $defaultvalues['videofile'] = $draftitemid;
 
         $defaultvalues['completionpercentenabled'] = !empty($defaultvalues['completionpercent']) ? 1 : 0;
         if (empty($defaultvalues['completionpercent'])) {
@@ -218,7 +180,7 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
             $mform->createElement('checkbox', 'completionpercentenabled', '',
                 get_string('completionpercent_label', 'mod_cloudstudio')),
             $mform->createElement('text', 'completionpercent',
-                get_string('completionpercent_label', 'mod_cloudstudio'), array('size' => '2')),
+                get_string('completionpercent_label', 'mod_cloudstudio'), ['size' => '2']),
             $mform->createElement('html', '%'),
         ];
 
@@ -248,8 +210,8 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
     public function validation($data, $files) {
 
         $errors = parent::validation($data, $files);
-        if (!isset($data['videourl']) || empty($data['videourl'])) {
-            $errors['videourl'] = get_string('required');
+        if (!isset($data['identificador']) || empty($data['identificador'])) {
+            $errors['identificador'] = get_string('required');
         }
 
         if (isset($data['completionpercent']) && $data['completionpercent'] != '') {
@@ -269,25 +231,6 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
             }
             if ($data['gradepass'] > 100) {
                 $errors['gradepass'] = get_string('completionpercent_error', 'mod_cloudstudio');
-            }
-        }
-
-        $urlparse = \mod_cloudstudio\util\url::parse($data['videourl']);
-        if ($urlparse->engine == "") {
-            $errors['videourl'] = get_string('idnotfound', 'mod_cloudstudio');
-        }
-
-        if ($urlparse->engine == "resource") {
-
-            if (empty($data['videofile'])) {
-                // Field missing.
-                $errors['videofile'] = get_string('required');
-            } else {
-                $files = $this->get_draft_files('videofile');
-                if ($files && count($files) < 1) {
-                    // No file uploaded.
-                    $errors['videofile'] = get_string('required');
-                }
             }
         }
 

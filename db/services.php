@@ -17,9 +17,9 @@
 /**
  * services file
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -33,12 +33,12 @@ $functions = [
         'type' => 'write',
         'ajax' => true,
     ],
-    'mod_cloudstudio_services_opengraph_getinfo' => [
-        'classpath' => 'mod/cloudstudio/classes/service/opengraph.php',
-        'classname' => 'mod_cloudstudio\service\opengraph',
-        'methodname' => 'getinfo',
-        'description' => 'Save progress video.',
+    'mod_cloudstudio_services_cloudstudio_files' => [
+        'classpath' => 'mod/cloudstudio/classes/service/cloudstudio.php',
+        'classname' => 'mod_cloudstudio\service\cloudstudio',
+        'methodname' => 'files',
+        'description' => 'Get list files.',
         'type' => 'write',
         'ajax' => true,
-    ]
+    ],
 ];

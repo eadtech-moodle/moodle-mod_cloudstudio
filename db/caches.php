@@ -15,21 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_cloudstudio instance list viewed event.
+ * SCORM cache definition.
  *
- * @package   mod_cloudstudio
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_scorm
+ * @copyright  2023 Catalyst IT Ltd
+ * @author     Dan Marsden <dan@danmarsden.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_cloudstudio\event;
+defined('MOODLE_INTERNAL') || die();
 
-/**
- * The mod_cloudstudio instance list viewed event class.
- *
- * @package   mod_cloudstudio
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
-}
+$definitions = [
+    "cloudstudio_api_get" => [
+        "mode" => cache_store::MODE_APPLICATION,
+        'ttl' => 10 * 60 * 60, // 10hs
+        'staticacceleration' => true,
+    ],
+];

@@ -26,7 +26,7 @@ use moodle_url;
 
 /**
  * @package   mod_cloudstudio
- * @copyright 2023 Eduardo Kraus {@link http://eduardokraus.com}
+ * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cloudstudio_view extends \table_sql {
@@ -97,19 +97,7 @@ class cloudstudio_view extends \table_sql {
                 get_string('report_terminou', 'mod_cloudstudio'),
             ];
 
-            if (url::parse($cloudstudio->videourl)->engine == "drive") {
-                unset($columns[8]);
-                unset($columns[6]);
-                unset($columns[5]);
-                unset($columns[4]);
-                unset($columns[3]);
-
-                unset($headers[8]);
-                unset($headers[6]);
-                unset($headers[5]);
-                unset($headers[4]);
-                unset($headers[3]);
-            } else if ($this->is_downloading()) {
+            if ($this->is_downloading()) {
                 unset($columns[6]);
                 unset($headers[6]);
             }
@@ -134,15 +122,6 @@ class cloudstudio_view extends \table_sql {
                 get_string('report_visualizacoes', 'mod_cloudstudio'),
                 get_string('report_assistiu', 'mod_cloudstudio'),
             ];
-            if (url::parse($cloudstudio->videourl)->engine == "drive") {
-                unset($columns[5]);
-                unset($columns[4]);
-                unset($columns[3]);
-
-                unset($headers[5]);
-                unset($headers[4]);
-                unset($headers[3]);
-            }
 
             if (!$this->is_downloading()) {
                 $columns[] = 'extra';
@@ -177,10 +156,10 @@ class cloudstudio_view extends \table_sql {
         }
 
         if ($COURSE->id == SITEID) {
-            $profileurl = new moodle_url('/user/profile.php', array('id' => $linha->user_id));
+            $profileurl = new moodle_url('/user/profile.php', ['id' => $linha->user_id]);
         } else {
             $profileurl = new moodle_url('/user/view.php',
-                array('id' => $linha->user_id, 'course' => $COURSE->id));
+                ['id' => $linha->user_id, 'course' => $COURSE->id]);
         }
         return html_writer::link($profileurl, $name);
     }

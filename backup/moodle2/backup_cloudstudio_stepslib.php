@@ -17,19 +17,19 @@
 /**
  * Backup files
  *
- * @package    mod_cloudstudio
+ * @package   mod_cloudstudio
  * @category   backup
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    https://www.eduardokraus.com/
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   https://www.eduardokraus.com/
  */
 
 /**
  * Define the complete cloudstudio structure for backup, with file and id annotations
  *
- * @package    mod_cloudstudio
+ * @package   mod_cloudstudio
  * @category   backup
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    https://www.eduardokraus.com/
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   https://www.eduardokraus.com/
  */
 class backup_cloudstudio_activity_structure_step extends backup_activity_structure_step {
 
@@ -44,14 +44,13 @@ class backup_cloudstudio_activity_structure_step extends backup_activity_structu
         $userinfo = $this->get_setting_value('userinfo');
 
         // Define the root element describing the cloudstudio instance.
-        $cloudstudio = new backup_nested_element('cloudstudio', array('id'), array(
-            'course', 'name', 'intro', 'introformat', 'videourl', 'playersize',
-            'showcontrols', 'autoplay', 'grade_approval'));
+        $cloudstudio = new backup_nested_element('cloudstudio', ['id'], array(
+            'course', 'name', 'intro', 'introformat', 'identificador', 'grade_approval'));
 
         // If we had more elements, we would build the tree here.
 
         // Define data sources.
-        $cloudstudio->set_source_table('cloudstudio', array('id' => backup::VAR_ACTIVITYID));
+        $cloudstudio->set_source_table('cloudstudio', ['id' => backup::VAR_ACTIVITYID]);
 
         // If we were referring to other tables, we would annotate the relation
         // with the element's annotate_ids() method.

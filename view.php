@@ -17,10 +17,15 @@
 /**
  * view file
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use mod_cloudstudio\analytics\cloudstudio_view;
+use mod_cloudstudio\event\course_module_viewed;
+use mod_cloudstudio\output\mobile;
+use mod_cloudstudio\util\cloudstudio_api;
 
 require_once('../../config.php');
 require_once($CFG->libdir . '/completionlib.php');
@@ -31,11 +36,11 @@ $mobile = optional_param('mobile', 0, PARAM_INT);
 
 if ($id) {
     $cm = get_coursemodule_from_id('cloudstudio', $id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $cloudstudio = $DB->get_record('cloudstudio', array('id' => $cm->instance), '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+    $cloudstudio = $DB->get_record('cloudstudio', ['id' => $cm->instance], '*', MUST_EXIST);
 } else if ($n) {
-    $cloudstudio = $DB->get_record('cloudstudio', array('id' => $n), '*', MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $cloudstudio->course), '*', MUST_EXIST);
+    $cloudstudio = $DB->get_record('cloudstudio', ['id' => $n], '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $cloudstudio->course], '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('cloudstudio', $cloudstudio->id, $course->id, false, MUST_EXIST);
 } else {
     error('You must specify a course_module ID or an instance ID');
@@ -44,14 +49,14 @@ if ($id) {
 $secret = optional_param('secret', false, PARAM_TEXT);
 if ($secret) {
     $userid = optional_param('user_id', "", PARAM_INT);
-    \mod_cloudstudio\output\mobile::valid_token($userid, $secret);
+    mobile::valid_token($userid, $secret);
 }
 
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/cloudstudio:view', $context);
 
-$event = \mod_cloudstudio\event\course_module_viewed::create(array(
+$event = course_module_viewed::create(array(
     'objectid' => $PAGE->cm->instance,
     'context' => $PAGE->context,
 ));
@@ -80,8 +85,10 @@ if ($mobile) {
 
 echo $OUTPUT->header();
 
+$isTeacher = has_capability('moodle/course:manageactivities', $context);
+
 $linkreport = "";
-if (has_capability('moodle/course:manageactivities', $context)) {
+if ($isTeacher) {
     $linkreport = "<a class='cloudstudio-report-link' href='report.php?id={$cm->id}'>" .
         get_string('report_title', 'mod_cloudstudio') . "</a>";
 }
@@ -97,85 +104,100 @@ if (@$config->maxwidth >= 500) {
 }
 echo "<div id='cloudstudio_area_embed' {$style}>";
 
-$parseurl = \mod_cloudstudio\util\url::parse($cloudstudio->videourl);
+$cloudstudioview = cloudstudio_view::create($cm->id);
 
-$cloudstudioview = \mod_cloudstudio\analytics\cloudstudio_view::create($cm->id);
+$cloudstudio->identificador = cloudstudio_api::identificador($cloudstudio->identificador);
 
-if ($parseurl->videoid) {
-    $uniqueid = uniqid();
+echo cloudstudio_api::get("Player/{$cloudstudio->identificador}/html", [
+    'aluno_matricula' => $USER->id,
+    'aluno_nome' => fullname($USER),
+    'aluno_email' => $USER->email,
+]);
 
-    $element_id = "{$parseurl->engine}-{$uniqueid}";
+$text = $OUTPUT->heading(get_string('view_seu_mapa', 'mod_cloudstudio') . ' <span></span>', 3, 'main-view', 'seu-mapa-view');
+echo $OUTPUT->render_from_template('mod_cloudstudio/mapa', [
+    'class' => $config->showmapa ? "" : "style='display:none'",
+    'data-mapa' => base64_encode($cloudstudioview->mapa),
+    'text' => $text
+]);
 
-    if ($config->showcontrols == 2) {
-        $cloudstudio->showcontrols = 0;
-    } else if ($config->showcontrols == 3) {
-        $cloudstudio->showcontrols = 1;
-    }
+$tab = optional_param('tab', "livro", PARAM_TEXT);
+$config = get_config('cloudstudio');
+$url = "/mod/cloudstudio/view.php?id={$id}";
+$tabs = [];
+$tab_content = "";
+if ($cloudstudio->livro || $isTeacher) {
+    $tabs[] = new tabobject("livro", new moodle_url($url, ['tab' => 'livro']), get_string('view_livro', 'mod_cloudstudio'));
+    if ($tab == "livro") {
+        $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/livro");
+        $json = json_decode($json);
 
-    if ($config->autoplay == 2) {
-        $cloudstudio->autoplay = 0;
-    } else if ($config->autoplay == 3) {
-        $cloudstudio->autoplay = 1;
-    }
-
-    if ($parseurl->engine == "cloudstudio") {
-        die('Cloud Studio');
-    }
-    else if ($parseurl->engine == "resource") {
-        $files = get_file_storage()->get_area_files(
-            $context->id, 'mod_cloudstudio', 'content', $cloudstudio->id, 'sortorder DESC, id ASC', false);
-        $file = reset($files);
-        if ($file) {
-            $path = "/{$context->id}/mod_cloudstudio/content/{$cloudstudio->id}{$file->get_filepath()}{$file->get_filename()}";
-            $fullurl = moodle_url::make_file_url('/pluginfile.php', $path, false)->out();
-
-            $embedparameters = implode(" ", [
-                $cloudstudio->showcontrols ? "controls" : "",
-                $cloudstudio->autoplay ? "autoplay" : "",
-            ]);
-
-            if ($parseurl->videoid == "mp3") {
-                echo "<div id='{$element_id}'></div>";
-
-                $PAGE->requires->js_call_amd('mod_cloudstudio/player_create', 'resource_audio', [
-                    (int)$cloudstudioview->id,
-                    $cloudstudioview->currenttime,
-                    "{$parseurl->engine}-{$uniqueid}",
-                    $fullurl,
-                    $cloudstudio->autoplay ? true : false,
-                    $cloudstudio->showcontrols ? true : false,
-                ]);
-            } else {
-                echo "<div id='{$element_id}'></div>";
-
-                $PAGE->requires->js_call_amd('mod_cloudstudio/player_create', 'resource_video', [
-                    (int)$cloudstudioview->id,
-                    $cloudstudioview->currenttime,
-                    "{$parseurl->engine}-{$uniqueid}",
-                    $fullurl,
-                    $cloudstudio->autoplay ? true : false,
-                    $cloudstudio->showcontrols ? true : false,
-                ]);
-            }
+        if (isset($json->data) && isset($json->data->url)) {
+            $tab_content = "<iframe src='{$config->urlcloudstidio}vendor/pdfjs/web/viewer.html?file={$json->data->url}' width='100%' height='800px' frameborder='0'></iframe>";
         } else {
-            $message = "Arquivo não localizado!";
-            $notification = new \core\output\notification($message, \core\output\notification::NOTIFY_ERROR);
-            $notification->set_show_closebutton(false);
-            echo \html_writer::span($PAGE->get_renderer('core')->render($notification));
+            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+        }
+    }
+}
+if ($cloudstudio->mapamental || $isTeacher) {
+    $tabs[] = new tabobject("mapamental", new moodle_url($url, ['tab' => 'mapamental']), get_string('view_mapamental', 'mod_cloudstudio'));
+    if ($tab == "mapamental") {
+        $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/mapamental");
+        $json = json_decode($json);
+
+        if (isset($json->data) && isset($json->data->mapamental)) {
+            $tab_content = $OUTPUT->render_from_template('mod_cloudstudio/tab/mapamental', [
+                'mapaheight' => $json->data->mapaheight * 1.3,
+                'markdown' => $json->data->mapamental,
+                'urlcloudstidio' => $config->urlcloudstidio,
+                'identificador' => cloudstudio_api::identificador($cloudstudio->identificador),
+            ]);
+        } else {
+            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+        }
+    }
+}
+if ($isTeacher) {
+    $tabs[] = new tabobject("sugestao", new moodle_url($url, ['tab' => 'sugestao']), get_string('view_sugestao', 'mod_cloudstudio'));
+    if ($tab == "sugestao") {
+        $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/sugestao");
+        $json = json_decode($json);
+
+        if (isset($json->data) && isset($json->data[0])) {
+            $tab_content = $OUTPUT->render_from_template('mod_cloudstudio/tab/sugestao', $json);
+        } else {
+            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
         }
     }
 
-    $text = $OUTPUT->heading(get_string('seu_mapa_view', 'mod_cloudstudio') . ' <span></span>', 3, 'main-view', 'seu-mapa-view');
-    echo $OUTPUT->render_from_template('mod_cloudstudio/mapa', [
-        'class' => $config->showmapa ? "" : "style='display:none'",
-        'data-mapa' => base64_encode($cloudstudioview->mapa),
-        'text' => $text
-    ]);
+    $tabs[] = new tabobject("licao", new moodle_url($url, ['tab' => 'licao']), get_string('view_licao', 'mod_cloudstudio'));
+    if ($tab == "licao") {
+        $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/licao");
+        $json = json_decode($json);
 
-} else {
-    echo $OUTPUT->render_from_template('mod_cloudstudio/error');
-    $config->showmapa = false;
+        if (isset($json->data) && isset($json->data[0])) {
+            $tab_content = $OUTPUT->render_from_template('mod_cloudstudio/tab/licao', $json);
+        } else {
+            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+        }
+    }
+
+    $tabs[] = new tabobject("short", new moodle_url($url, ['tab' => 'short']), get_string('view_short', 'mod_cloudstudio'));
+    if ($tab == "short") {
+        $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/short");
+        $json = json_decode($json);
+
+        if (isset($json->data) && isset($json->data[0])) {
+            $tab_content = $OUTPUT->render_from_template('mod_cloudstudio/tab/short', $json);
+        } else {
+            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+        }
+    }
 }
+
+echo $OUTPUT->tabtree($tabs, $tab);
+echo $tab_content;
+
 
 echo '</div>';
 

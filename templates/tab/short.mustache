@@ -1,0 +1,15 @@
+<div class="area-shorts">
+
+    <h2>Sugestão de Short baseado na transcrição do vídeo</h2>
+
+    {{#data}}
+        <fieldset class="area-short">
+            <legend>Sugestão {{{num}}}</legend>
+            <div class="enunciado">{{{description}}}</div>
+
+            <p>Início em <strong>{{{start_time}}}</strong> até o tempo <strong>{{{end_time}}}</strong> com
+                duração de <strong>{{{time}}}</strong></p>
+
+        </fieldset>
+    {{/data}}
+</div>

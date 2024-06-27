@@ -17,10 +17,10 @@
 /**
  * Backup files
  *
- * @package    mod_cloudstudio
+ * @package   mod_cloudstudio
  * @category   backup
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    https://www.eduardokraus.com/
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   https://www.eduardokraus.com/
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -30,10 +30,10 @@ require_once($CFG->dirroot . '/mod/cloudstudio/backup/moodle2/backup_cloudstudio
 /**
  * Provides the steps to perform one complete backup of the cloudstudio instance
  *
- * @package    mod_cloudstudio
+ * @package   mod_cloudstudio
  * @category   backup
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    https://www.eduardokraus.com/
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   https://www.eduardokraus.com/
  */
 class backup_cloudstudio_activity_task extends backup_activity_task {
 

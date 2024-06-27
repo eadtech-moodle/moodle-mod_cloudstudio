@@ -17,9 +17,9 @@
 /**
  * lib file
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -121,35 +121,14 @@ function cloudstudio_add_instance(stdClass $cloudstudio, mod_cloudstudio_mod_for
 
     $cloudstudio->timemodified = time();
     $cloudstudio->timecreated = time();
-    $cloudstudio->playersize = optional_param("playersize", null, PARAM_RAW);
+    $cloudstudio->livro = optional_param("livro", 1, PARAM_INT);
+    $cloudstudio->mapamental = optional_param("mapamental", 1, PARAM_INT);
 
     $cloudstudio->id = $DB->insert_record('cloudstudio', $cloudstudio);
 
     \mod_cloudstudio\grade\grades_util::grade_item_update($cloudstudio);
-    cloudstudio_set_mainfile($cloudstudio);
 
     return $cloudstudio->id;
-}
-
-/**
- * @param stdClass $cloudstudio
- * @throws coding_exception
- */
-function cloudstudio_set_mainfile($cloudstudio) {
-    $fs = get_file_storage();
-    $cmid = $cloudstudio->coursemodule;
-    $draftitemid = $cloudstudio->videofile;
-
-    $context = context_module::instance($cmid);
-    if ($draftitemid) {
-        $options = ['subdirs' => true, 'embed' => true];
-        file_save_draft_area_files($draftitemid, $context->id, 'mod_cloudstudio', 'content', $cloudstudio->id, $options);
-    }
-    $files = $fs->get_area_files($context->id, 'mod_cloudstudio', 'content', 0, 'sortorder', false);
-    if (count($files) == 1) {
-        $file = reset($files);
-        file_set_sortorder($context->id, 'mod_cloudstudio', 'content', 0, $file->get_filepath(), $file->get_filename(), 1);
-    }
 }
 
 /**
@@ -165,7 +144,8 @@ function cloudstudio_update_instance(stdClass $cloudstudio, mod_cloudstudio_mod_
 
     $cloudstudio->timemodified = time();
     $cloudstudio->id = $cloudstudio->instance;
-    $cloudstudio->playersize = optional_param("playersize", null, PARAM_RAW);
+    $cloudstudio->livro = optional_param("livro", 1, PARAM_INT);
+    $cloudstudio->mapamental = optional_param("mapamental", 1, PARAM_INT);
 
     $result = $DB->update_record('cloudstudio', $cloudstudio);
 
@@ -185,7 +165,7 @@ function cloudstudio_update_instance(stdClass $cloudstudio, mod_cloudstudio_mod_
 function cloudstudio_delete_instance($id) {
     global $DB;
 
-    if (!$cloudstudio = $DB->get_record('cloudstudio', array('id' => $id))) {
+    if (!$cloudstudio = $DB->get_record('cloudstudio', ['id' => $id])) {
         return false;
     }
 
@@ -199,8 +179,8 @@ function cloudstudio_delete_instance($id) {
             $file->delete();
         }
     }
-    $DB->delete_records('cloudstudio', array('id' => $cloudstudio->id));
-    $DB->delete_records('cloudstudio_view', array('cm_id' => $cm->id));
+    $DB->delete_records('cloudstudio', ['id' => $cloudstudio->id]);
+    $DB->delete_records('cloudstudio_view', ['cm_id' => $cm->id]);
 
     return true;
 }
@@ -307,7 +287,7 @@ function cloudstudio_get_coursemodule_info($coursemodule) {
     global $DB;
 
     $cloudstudio = $DB->get_record('cloudstudio', ['id' => $coursemodule->instance],
-        'id, name, videourl, intro, introformat, completionpercent');
+        'id, name, identificador, intro, introformat, completionpercent');
 
     $info = new cached_cm_info();
     if ($cloudstudio) {
@@ -348,7 +328,7 @@ function cloudstudio_extend_settings_navigation($settings, $cloudstudionode) {
 
     if (has_capability('moodle/course:manageactivities', $PAGE->cm->context)) {
         $node = navigation_node::create(get_string('report', 'mod_cloudstudio'),
-            new moodle_url('/mod/cloudstudio/report.php', array('id' => $PAGE->cm->id)),
+            new moodle_url('/mod/cloudstudio/report.php', ['id' => $PAGE->cm->id]),
             navigation_node::TYPE_SETTING, null, 'mod_cloudstudio_report',
             new pix_icon('i/report', ''));
         $cloudstudionode->add_node($node, $beforekey);
@@ -386,7 +366,7 @@ function cloudstudio_extend_navigation_course($navigation, $course, $context) {
  * @throws moodle_exception
  * @throws require_login_exception
  */
-function cloudstudio_pluginfile($course, $cm, context $context, $filearea, $args, $forcedownload, array $options = array()) {
+function cloudstudio_pluginfile($course, $cm, context $context, $filearea, $args, $forcedownload, array $options = []) {
 
     // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -497,10 +477,10 @@ function cloudstudio_dndupload_handle($uploadinfo) {
     $data->introformat = FORMAT_HTML;
     $data->coursemodule = $uploadinfo->coursemodule;
 
-    $data->playersize = 1;
-    $data->showcontrols = 1;
-    $data->autoplay = 0;
     $data->grade_approval = 0;
+
+    $data->livro = 1;
+    $data->mapamental = 1;
 
     $data->instance = cloudstudio_add_instance($data, null);
 
@@ -539,7 +519,7 @@ function cloudstudio_dndupload_handle($uploadinfo) {
         $video = json_decode($result);
 
         if (isset($video->identificador)) {
-            $data->videourl = $video->identificador;
+            $data->identificador = $video->identificador;
             cloudstudio_update_instance($data, null);
         }
 
@@ -551,7 +531,7 @@ function cloudstudio_dndupload_handle($uploadinfo) {
             $files = $fs->get_area_files($draftcontext->id, 'user', 'draft', $uploadinfo->draftitemid, '', false);
             if ($file = reset($files)) {
 
-                $data->videourl = "[resource-file:{$file->get_filename()}]";
+                $data->identificador = "[resource-file:{$file->get_filename()}]";
                 $options = ['subdirs' => true, 'embed' => true];
                 file_save_draft_area_files($uploadinfo->draftitemid, $context->id,
                     'mod_cloudstudio', 'content', $data->instance, $options);
@@ -680,7 +660,7 @@ function cloudstudio_get_completion_state($course, $cm, $userid, $type) {
     if (isset($PAGE->cm->id) && $PAGE->cm->id == $cm->id) {
         $data = $PAGE->activityrecord;
     } else {
-        $data = $DB->get_record('data', array('id' => $cm->instance), '*', MUST_EXIST);
+        $data = $DB->get_record('data', ['id' => $cm->instance], '*', MUST_EXIST);
     }
     // If completion option is enabled, evaluate it and return true/false.
     if ($data->completionpercent) {

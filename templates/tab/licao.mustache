@@ -1,0 +1,18 @@
+<div class="area-questoes">
+
+    {{#data}}
+        <fieldset class="area-questao">
+            <legend class="enunciado">{{{enunciado}}}</legend>
+
+            <div class="alternativas">
+                {{#alternativas}}
+                    <div class="alternativa {{{correta}}}">
+                        <div>{{{letra}}}<span>: </span></div>
+                        <label>{{{alternativa}}}</label>
+                    </div>
+                {{/alternativas}}
+            </div>
+            <p class="explicacao">{{{feedback}}}</p>
+        </fieldset>
+    {{/data}}
+</div>

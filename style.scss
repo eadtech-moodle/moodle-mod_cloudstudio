@@ -137,3 +137,158 @@
         display: none !important;
     }
 }
+
+
+.galery-blocks-area {
+    display     : flex;
+    flex-wrap   : wrap;
+    position    : relative;
+    width       : 100%;
+    align-items : flex-start;
+    .galery-item {
+        display       : block;
+        box-shadow    : 0 4px 24px 0 rgba(34, 41, 47, .24);
+        border-radius : 6px;
+        margin        : 0 7px 16px;
+        transition    : .4s ease-in-out;
+        width : calc(50% - 14px); // 2
+        //width : calc(33% - 14px); // 3
+        .card-img-top {
+            width         : 100%;
+            border-radius : 6px 6px 0 0;
+        }
+        .clamp {
+            overflow           : hidden;
+            text-overflow      : ellipsis;
+            -webkit-box-orient : vertical;
+            -webkit-line-clamp : 2;
+            display            : -webkit-box;
+            line-height        : 1.5;
+            font-size          : 16px;
+        }
+    }
+}
+
+.area-livro {
+    border        : 1px solid #FEFEFE4D;
+    border-radius : 8px;
+    margin        : 0 13px;
+    padding       : 7px 10px;
+    .form-group label {
+        display : none;
+    }
+    .panel {
+        p {
+            text-indent : 30px;
+            text-align  : justify;
+        }
+    }
+}
+
+.area-mapamental {
+    span {
+        font-size : 0;
+    }
+    > svg {
+        width      : 100%;
+        min-height : 300px;
+        max-height : 500px;
+        // color      : #FFFFFF;
+        font-size  : 27px;
+    }
+    .markmap-foreign {
+        div {
+            line-height : 27px;
+            // color       : #FFFFFF;
+        }
+        a {
+            // color           : #B7DCF0;
+            text-decoration : underline;
+            &:hover {
+                // color           : #E2F1F2;
+                text-decoration : none;
+            }
+        }
+    }
+}
+
+.area-questoes,
+.area-shorts {
+    .area-questao,
+    .area-short {
+        border        : 1px solid #514B4B4D;
+        border-radius : 8px;
+        padding       : 7px 10px;
+        margin        : 0 13px 15px;
+        h3.enunciado {
+            color : #3B3E4D;
+        }
+        .alternativas {
+            .alternativa {
+                width         : 100%;
+                min-height    : 48px;
+                position      : relative;
+                margin-bottom : 7px;
+                overflow      : hidden;
+                border-radius : 5px;
+                background    : #F7F7F7;
+                display       : flex;
+                align-items   : center;
+                div {
+                    min-width       : 59px;
+                    height          : 100%;
+                    background      : #D2D2D2;
+                    font-size       : 28px;
+                    color           : #FFFFFF;
+                    font-weight     : bold;
+                    display         : flex;
+                    align-items     : center;
+                    justify-content : center;
+                    position        : absolute;
+                    top             : 0;
+                    bottom          : 0;
+                    left            : 0;
+                    span {
+                        font-size : 0;
+                    }
+                }
+                label {
+                    font-size   : 19px;
+                    color       : #8B8B8B;
+                    font-weight : bold;
+                    height      : 100%;
+                    margin-left : 68px;
+                    line-height : 21px;
+                    padding     : 12px 0;
+                }
+                &.selected {
+                    div {
+                        background : #2F764E;
+                    }
+                    label {
+                        color : #2F764E;
+                    }
+                    &::after {
+                        content       : "";
+                        border-left   : solid 3px #2F764E;
+                        border-bottom : solid 3px #2F764E;
+                        width         : 21px;
+                        height        : 11px;
+                        transform     : rotate(-45deg);
+                        margin-right  : 10px;
+                        margin-top    : -5px;
+                    }
+                }
+            }
+        }
+        .explicacao {
+            font-size : 14px;
+            padding   : 12px 12px 0;
+            &:before {
+                content     : "Feedback: ";
+                color       : #9C9C9C;
+                margin-left : 18px;
+            }
+        }
+    }
+}

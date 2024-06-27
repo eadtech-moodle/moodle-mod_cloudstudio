@@ -17,9 +17,9 @@
 /**
  * setting file
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -42,23 +42,6 @@ if ($ADMIN->fulltree) {
     $description = get_string('showmapa_desc', 'mod_cloudstudio');
     $settings->add(new admin_setting_configcheckbox('cloudstudio/showmapa',
         $title, $description, 1));
-
-    $options = array(
-        0 => get_string('settings_opcional_desmarcado', 'mod_cloudstudio'),
-        1 => get_string('settings_opcional_marcado', 'mod_cloudstudio'),
-        2 => get_string('settings_obrigatorio_desmarcado', 'mod_cloudstudio'),
-        3 => get_string('settings_obrigatorio_marcado', 'mod_cloudstudio'),
-    );
-
-    $title = get_string('showcontrols', 'mod_cloudstudio');
-    $description = get_string('showcontrols_desc', 'mod_cloudstudio');
-    $settings->add(new admin_setting_configselect('cloudstudio/showcontrols',
-        $title, $description, 1, $options));
-
-    $title = get_string('autoplay', 'mod_cloudstudio');
-    $description = get_string('autoplay_desc', 'mod_cloudstudio');
-    $settings->add(new admin_setting_configselect('cloudstudio/autoplay',
-        $title, $description, 0, $options));
 
     $title = get_string('maxwidth', 'mod_cloudstudio');
     $description = get_string('maxwidth_desc', 'mod_cloudstudio');

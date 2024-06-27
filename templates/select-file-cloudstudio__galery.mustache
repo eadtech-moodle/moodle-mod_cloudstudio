@@ -1,0 +1,17 @@
+<div class="galery-blocks-area">
+    {{#videos}}
+        <div class="h-100 card galery-item galery-item-arquivo"
+             data-identificador="{{identificador}}"
+             data-titulo="{{titulo}}"
+             data-descricao="{{descricao}}"
+             data-size="{{size}}">
+            <img class="card-img-top"
+                 src="{{{thumb}}}"
+                 alt="Thumb">
+            <div class="card-body p-2">
+                <div class="clamp">{{{titulo}}}</div>
+                <button>{{#str}}use_this_file,mod_cloudstudio{{/str}}</button>
+            </div>
+        </div>
+    {{/videos}}
+</div>
