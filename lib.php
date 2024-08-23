@@ -22,8 +22,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_cloudstudio\util\cloudstudio_api;
+
 /**
  * @param string $feature
+ *
  * @return bool|int|null
  */
 function cloudstudio_supports($feature) {
@@ -63,6 +66,7 @@ function cloudstudio_supports($feature) {
  * @param stdClass $cloudstudio
  * @param int $userid
  * @param bool $nullifnone
+ *
  * @return null
  * @throws coding_exception
  * @throws dml_exception
@@ -81,6 +85,7 @@ function cloudstudio_update_grades($cloudstudio, $userid = 0, $nullifnone = true
 /**
  * @param stdClass $cloudstudio
  * @param int $userid
+ *
  * @return array|bool
  * @throws coding_exception
  * @throws dml_exception
@@ -112,6 +117,7 @@ function cloudstudio_get_user_grades($cloudstudio, $userid = 0) {
 /**
  * @param stdClass $cloudstudio
  * @param mod_cloudstudio_mod_form|null $mform
+ *
  * @return bool|int
  * @throws dml_exception
  * @throws coding_exception
@@ -136,8 +142,10 @@ function cloudstudio_add_instance(stdClass $cloudstudio, mod_cloudstudio_mod_for
  *
  * @param stdClass $cloudstudio
  * @param mod_cloudstudio_mod_form|null $mform
+ *
  * @return bool
  * @throws dml_exception
+ * @throws coding_exception
  */
 function cloudstudio_update_instance(stdClass $cloudstudio, mod_cloudstudio_mod_form $mform = null) {
     global $DB;
@@ -158,6 +166,7 @@ function cloudstudio_update_instance(stdClass $cloudstudio, mod_cloudstudio_mod_
  * function cloudstudio_delete_instance
  *
  * @param int $id
+ *
  * @return bool
  * @throws dml_exception
  * @throws coding_exception
@@ -192,6 +201,7 @@ function cloudstudio_delete_instance($id) {
  * @param stdClass $user
  * @param stdClass $mod
  * @param stdClass $cloudstudio
+ *
  * @return stdClass
  */
 function cloudstudio_user_outline($course, $user, $mod, $cloudstudio) {
@@ -208,6 +218,7 @@ function cloudstudio_user_outline($course, $user, $mod, $cloudstudio) {
  * @param stdClass $user
  * @param stdClass $mod
  * @param stdClass $cloudstudio
+ *
  * @throws coding_exception
  * @throws dml_exception
  */
@@ -280,11 +291,14 @@ function cloudstudio_format_time($time) {
  * function cloudstudio_get_coursemodule_info
  *
  * @param stdClass $coursemodule
+ *
  * @return cached_cm_info
  * @throws dml_exception
  */
 function cloudstudio_get_coursemodule_info($coursemodule) {
-    global $DB;
+    global $DB, $CFG;
+
+    $config = get_config('cloudstudio');
 
     $cloudstudio = $DB->get_record('cloudstudio', ['id' => $coursemodule->instance],
         'id, name, identificador, intro, introformat, completionpercent');
@@ -302,12 +316,60 @@ function cloudstudio_get_coursemodule_info($coursemodule) {
         $info->customdata['customcompletionrules']['completionpercent'] = $cloudstudio->completionpercent;
     }
 
+    if ($config->display_popup) {
+        $fullurl = "$CFG->wwwroot/mod/cloudstudio/view.php?id=$coursemodule->id&amp;mobile=1";
+        $wh = "width=640,height=480,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes";
+        $info->onclick = "window.open('{$fullurl}', '', '{$wh}'); return false;";
+    }
+
     return $info;
+}
+
+/**
+ * Function cloudstudio_before_standard_html_head
+ *
+ * @throws dml_exception
+ */
+function cloudstudio_before_standard_html_head() {
+    global $COURSE, $DB;
+
+    if ($COURSE->id == 1 || $COURSE->format != "tiles" || AJAX_SCRIPT) {
+        return;
+    }
+
+    $sql = "
+        SELECT cm.id, cm.instance
+          FROM {course_modules} cm
+          JOIN {modules}         m ON cm.module = m.id
+         WHERE cm.course = {$COURSE->id} 
+           AND m.name    = 'cloudstudio'";
+    $modules = $DB->get_records_sql($sql);
+
+    $css = "";
+    foreach ($modules as $module) {
+        $cloudstudio = $DB->get_record("cloudstudio", ["id" => $module->instance]);
+        if ($cloudstudio) {
+            $result = json_decode(cloudstudio_api::get("Arquivo/{$cloudstudio->identificador}/status"));
+            if ($result) {
+                $css .= "
+                    .format-tiles-cm-list #module-{$module->id} {
+                        background: url({$result->thumb});
+                        background-size: contain;
+                        background-position: top;
+                    }
+                    .format-tiles-cm-list #module-{$module->id} .tileiconcontainer {
+                        background-color: transparent;
+                    }";
+            }
+        }
+    }
+    echo "<style>{$css}</style>";
 }
 
 /**
  * @param settings_navigation $settings
  * @param navigation_node $cloudstudionode
+ *
  * @return void
  * @throws \coding_exception
  * @throws moodle_exception
@@ -339,6 +401,7 @@ function cloudstudio_extend_settings_navigation($settings, $cloudstudionode) {
  * @param \navigation_node $navigation
  * @param stdClass $course
  * @param \context $context
+ *
  * @throws coding_exception
  * @throws moodle_exception
  */
@@ -354,19 +417,26 @@ function cloudstudio_extend_navigation_course($navigation, $course, $context) {
 /**
  * Serve the files from the cloudstudio file areas
  *
- * @param stdClass $course the course object
- * @param stdClass $cm the course module object
- * @param stdClass $context the context
- * @param string $filearea the name of the file area
- * @param array $args extra arguments (itemid, path)
+ * @param stdClass $course    the course object
+ * @param stdClass $cm        the course module object
+ * @param stdClass $context   the context
+ * @param string $filearea    the name of the file area
+ * @param array $args         extra arguments (itemid, path)
  * @param bool $forcedownload whether or not force download
- * @param array $options additional options affecting the file serving
+ * @param array $options      additional options affecting the file serving
+ *
  * @return bool false if the file not found, just send the file otherwise and do not return anything
  * @throws coding_exception
  * @throws moodle_exception
  * @throws require_login_exception
  */
 function cloudstudio_pluginfile($course, $cm, context $context, $filearea, $args, $forcedownload, array $options = []) {
+
+    if ($filearea == "thumb") {
+        $url = urldecode($args[0]);
+        header("Location: {$url}");
+        die();
+    }
 
     // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -462,6 +532,7 @@ function cloudstudio_dndupload_register() {
  * Handle a file that has been uploaded
  *
  * @param stdClass $uploadinfo details of the file / content that has been uploaded
+ *
  * @return int instance id of the newly created mod
  * @throws coding_exception
  * @throws dml_exception
@@ -593,6 +664,7 @@ function cloudstudio_dndupload_testupload($file) {
  * Callback which returns human-readable strings describing the active completion custom rules for the module instance.
  *
  * @param cm_info|stdClass $cm object with fields ->completion and ->customdata['customcompletionrules']
+ *
  * @return array $descriptions the array of descriptions for the custom rules.
  * @throws coding_exception
  */
@@ -613,9 +685,11 @@ function mod_cloudstudio_get_completion_active_rule_descriptions($cm) {
  * count of on its entries.
  *
  * @since Moodle 3.3
- * @param object $data The data object for this activity
+ *
+ * @param object $data   The data object for this activity
  * @param object $course Course
- * @param object $cm course-module
+ * @param object $cm     course-module
+ *
  * @throws moodle_exception
  */
 function cloudstudio_update_completion_state($data, $course, $cm) {
@@ -641,14 +715,17 @@ function cloudstudio_update_completion_state($data, $course, $cm) {
  * to the function name. This is why there are unused parameters.
  *
  * @deprecated since Moodle 3.11
- * @todo MDL-71196 Final deprecation in Moodle 4.3
- * @see \mod_data\completion\custom_completion
- * @since Moodle 3.3
- * @param stdClass $course Course
+ * @todo       MDL-71196 Final deprecation in Moodle 4.3
+ * @see        \mod_data\completion\custom_completion
+ * @since      Moodle 3.3
+ *
+ * @param stdClass $course     Course
  * @param cm_info|stdClass $cm course-module
- * @param int $userid User ID
- * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @param int $userid          User ID
+ * @param bool $type           Type of comparison (or/and; can be used as return value if no conditions)
+ *
  * @return bool True if completed, false if not, $type if conditions not set.
+ * @throws dml_exception
  */
 function cloudstudio_get_completion_state($course, $cm, $userid, $type) {
     global $DB, $PAGE;

@@ -47,4 +47,9 @@ if ($ADMIN->fulltree) {
     $description = get_string('maxwidth_desc', 'mod_cloudstudio');
     $settings->add(new admin_setting_configtext('cloudstudio/maxwidth',
         $title, $description, 0, PARAM_INT));
+
+    $title = "Abrir em Popup";
+    $description = "";
+    $settings->add(new admin_setting_configcheckbox('cloudstudio/display_popup',
+        $title, $description, 1));
 }
