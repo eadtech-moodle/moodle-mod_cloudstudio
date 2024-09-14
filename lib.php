@@ -25,9 +25,11 @@
 use mod_cloudstudio\util\cloudstudio_api;
 
 /**
- * @param string $feature
+ * Function cloudstudio_supports
  *
- * @return bool|int|null
+ * @param $feature
+ *
+ * @return bool|int|null|string
  */
 function cloudstudio_supports($feature) {
 
@@ -62,11 +64,12 @@ function cloudstudio_supports($feature) {
 }
 
 /**
+ * Function cloudstudio_update_grades
+ *
  * @param stdClass $cloudstudio
  * @param int $userid
  * @param bool $nullifnone
  *
- * @return null
  * @throws coding_exception
  * @throws dml_exception
  */
@@ -82,6 +85,8 @@ function cloudstudio_update_grades($cloudstudio, $userid = 0, $nullifnone = true
 }
 
 /**
+ * Function cloudstudio_get_user_grades
+ *
  * @param stdClass $cloudstudio
  * @param int $userid
  *
@@ -113,13 +118,16 @@ function cloudstudio_get_user_grades($cloudstudio, $userid = 0) {
     return $DB->get_records_sql($sql, $params);
 }
 
+
 /**
+ * Function cloudstudio_add_instance
+ *
  * @param stdClass $cloudstudio
  * @param mod_cloudstudio_mod_form|null $mform
  *
  * @return bool|int
- * @throws dml_exception
  * @throws coding_exception
+ * @throws dml_exception
  */
 function cloudstudio_add_instance(stdClass $cloudstudio, mod_cloudstudio_mod_form $mform = null) {
     global $DB;
@@ -266,6 +274,13 @@ function cloudstudio_user_complete($course, $user, $mod, $cloudstudio) {
     }
 }
 
+/**
+ * Function cloudstudio_format_time
+ *
+ * @param $time
+ *
+ * @return string
+ */
 function cloudstudio_format_time($time) {
     if ($time < 60) {
         return "00:00:{$time}";
@@ -317,7 +332,8 @@ function cloudstudio_get_coursemodule_info($coursemodule) {
 
     if ($config->display_popup) {
         $fullurl = "$CFG->wwwroot/mod/cloudstudio/view.php?id=$coursemodule->id&amp;mobile=1";
-        $wh = "width=640,height=480,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes";
+        $wh = "width=640,height=480,toolbar=no,location=no,menubar=no,copyhistory=no," .
+            "status=no,directories=no,scrollbars=yes,resizable=yes";
         $info->onclick = "window.open('{$fullurl}', '', '{$wh}'); return false;";
     }
 
@@ -365,12 +381,14 @@ function cloudstudio_before_standard_html_head() {
     echo "<style>{$css}</style>";
 }
 
+
 /**
+ * Function cloudstudio_extend_settings_navigation
+ *
  * @param settings_navigation $settings
  * @param navigation_node $cloudstudionode
  *
- * @return void
- * @throws \coding_exception
+ * @throws coding_exception
  * @throws moodle_exception
  */
 function cloudstudio_extend_settings_navigation($settings, $cloudstudionode) {
@@ -396,7 +414,10 @@ function cloudstudio_extend_settings_navigation($settings, $cloudstudionode) {
     }
 }
 
+
 /**
+ * Function cloudstudio_extend_navigation_course
+ *
  * @param \navigation_node $navigation
  * @param stdClass $course
  * @param \context $context
@@ -418,7 +439,7 @@ function cloudstudio_extend_navigation_course($navigation, $course, $context) {
  *
  * @param stdClass $course    the course object
  * @param stdClass $cm        the course module object
- * @param stdClass $context   the context
+ * @param context $context    the context
  * @param string $filearea    the name of the file area
  * @param array $args         extra arguments (itemid, path)
  * @param bool $forcedownload whether or not force download
@@ -617,6 +638,13 @@ function cloudstudio_dndupload_handle($uploadinfo) {
     return $data->instance;
 }
 
+/**
+ * Function cloudstudio_dndupload_testupload
+ *
+ * @param $file
+ *
+ * @return array
+ */
 function cloudstudio_dndupload_testupload($file) {
     if (!isset($_FILES[$file])) {
         return ['message' => "Nenhum upload recebido!", 'status' => false];
@@ -690,8 +718,6 @@ function mod_cloudstudio_get_completion_active_rule_descriptions($cm) {
  * @throws moodle_exception
  */
 function cloudstudio_update_completion_state($data, $course, $cm) {
-
-    throw new Exception("bbbb");
 
     // If completion option is enabled, evaluate it and return true/false.
     $completion = new completion_info($course);

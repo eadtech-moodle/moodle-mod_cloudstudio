@@ -17,10 +17,10 @@
 /**
  * The Web service script that is called from the filepicker front end
  *
- * @since Moodle 2.0
+ * @since      Moodle 2.0
  * @package    repository
  * @copyright  2009 Dongsheng Cai {@link http://dongsheng.org}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define('AJAX_SCRIPT', true);
@@ -29,9 +29,12 @@ require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/../../lib/filelib.php');
 require_once(__DIR__ . '/../../repository/lib.php');
 
+require_login();
+require_capability('mod/cloudstudio:addinstance');
+
 // Parameters
 $action = required_param('action', PARAM_ALPHA);
-$saveasfilename = optional_param('title', '', PARAM_FILE);     // save as file name
+$saveasfilename = optional_param('title', '', PARAM_FILE); // Save as file name.
 
 $context = context_user::instance($USER->id);
 $PAGE->set_context($context);
@@ -59,11 +62,12 @@ switch ($action) {
         $draftcontext = context_user::instance($USER->id);
         $files = $fs->get_area_files($context->id, 'user', 'draft', $itemid);
 
-        $returnFiles = [];
+        $returnfiles = [];
         /** @var stored_file $file */
         foreach ($files as $file) {
             if (strpos($file->get_filepath(), "kapture")) {
-                $path = "/{$context->id}/mod_cloudstudio/{$file->get_filearea()}{$file->get_filepath()}{$file->get_itemid()}/{$file->get_filename()}";
+                $path = "/{$context->id}/mod_cloudstudio/{$file->get_filearea()}{$file->get_filepath()}" .
+                    "{$file->get_itemid()}/{$file->get_filename()}";
 
                 $extension = strtolower(pathinfo($file->get_filename(), PATHINFO_EXTENSION));
                 $icon = false;
@@ -83,16 +87,16 @@ switch ($action) {
                 }
 
                 if ($icon) {
-                    $returnFiles[] = [
+                    $returnfiles[] = [
                         "filename" => $file->get_filename(),
                         "titulo" => $file->get_filename(),
                         "image" => $icon,
-                        "file" => moodle_url::make_file_url('/pluginfile.php', $path, false)->out()
+                        "file" => moodle_url::make_file_url('/pluginfile.php', $path, false)->out(),
                     ];
                 }
             }
         }
 
-        echo json_encode(['slides' => $returnFiles]);
+        echo json_encode(['slides' => $returnfiles]);
         break;
 }

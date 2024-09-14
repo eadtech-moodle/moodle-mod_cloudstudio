@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * SCORM cache definition.
+ * Cache definition.
  *
- * @package    mod_scorm
+ * @package    mod_cloudstudio
  * @copyright  2023 Catalyst IT Ltd
  * @author     Dan Marsden <dan@danmarsden.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

@@ -14,15 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Cloudstudio View implementation for mod_cloudstudio.
- */
-
 namespace mod_cloudstudio\analytics;
 
 use mod_cloudstudio\grade\grades_util;
 
 /**
+ * Cloudstudio View implementation for mod_cloudstudio.
+ *
  * @package   mod_cloudstudio
  * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -45,24 +43,24 @@ class cloudstudio_view {
 
         if ($cloudstudioview) {
             if ($cloudstudioview->currenttime > ($cloudstudioview->duration - 3)) {
-                return self::_create($cmid);
+                return self::internal_create($cmid);
             }
             if ($cloudstudioview->percent < 90) {
                 return $cloudstudioview;
             }
         }
 
-        return self::_create($cmid);
+        return self::internal_create($cmid);
     }
 
     /**
-     * Function _create
+     * Function internal_create
      *
      * @param $cmid
      *
      * @return object
      */
-    private static function _create($cmid) {
+    private static function internal_create($cmid) {
         global $USER, $DB;
 
         $cloudstudioview = (object)[
@@ -85,18 +83,6 @@ class cloudstudio_view {
         return $cloudstudioview;
     }
 
-    /**
-     * @param int $viewid
-     * @param int $currenttime
-     * @param int $duration
-     * @param int $percent
-     * @param int $mapa
-     *
-     * @return bool
-     * @throws \coding_exception
-     * @throws \dml_exception
-     * @throws \moodle_exception
-     */
     public static function update($viewid, $currenttime, $duration, $percent, $mapa) {
         global $DB, $USER, $CFG;
 

@@ -16,6 +16,10 @@
 
 /**
  * Grades implementation for mod_cloudstudio.
+ *
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_cloudstudio\grade;
@@ -56,7 +60,7 @@ class grades_util {
         if ($cloudstudio->grade_approval == 1) {
             $grade = [
                 "userid" => $USER->id,
-                "rawgrade" => $percent
+                "rawgrade" => $percent,
             ];
 
             require_once("{$CFG->libdir}/gradelib.php");
@@ -73,8 +77,10 @@ class grades_util {
     }
 
     /**
-     * @param \stdClass $cloudstudio
-     * @param \stdClass $grades
+     * Function grade_item_update
+     *
+     * @param $cloudstudio
+     * @param null $grades
      *
      * @return int
      */
@@ -91,7 +97,7 @@ class grades_util {
             'itemname' => $cloudstudio->name,
             'gradetype' => GRADE_TYPE_VALUE,
             'grademax' => 100,
-            'grademin' => 0
+            'grademin' => 0,
         ];
 
         if (isset($cloudstudio->cmidnumber)) {

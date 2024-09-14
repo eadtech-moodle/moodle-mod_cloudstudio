@@ -71,7 +71,7 @@ $completion->set_module_viewed($cm);
 $params = [
     'n' => $n,
     'id' => $id,
-    'mobile' => $mobile
+    'mobile' => $mobile,
 ];
 $PAGE->set_url('/mod/cloudstudio/view.php', $params);
 $PAGE->requires->css('/mod/cloudstudio/style.css');
@@ -117,7 +117,7 @@ $text = $OUTPUT->heading(get_string('view_seu_mapa', 'mod_cloudstudio') . ' <spa
 echo $OUTPUT->render_from_template('mod_cloudstudio/mapa', [
     'class' => $config->showmapa ? "" : "style='display:none'",
     'data-mapa' => base64_encode($cloudstudioview->mapa),
-    'text' => $text
+    'text' => $text,
 ]);
 
 $tab = optional_param('tab', "livro", PARAM_TEXT);
@@ -132,14 +132,16 @@ if ($cloudstudio->livro || $isteacher) {
         $json = json_decode($json);
 
         if (isset($json->data) && isset($json->data->url)) {
-            $tabcontent = "<iframe src='{$config->urlcloudstidio}vendor/pdfjs/web/viewer.html?file={$json->data->url}' width='100%' height='800px' frameborder='0'></iframe>";
+            $tabcontent = "<iframe src='{$config->urlcloudstidio}vendor/pdfjs/web/viewer.html?file={$json->data->url}' 
+                                   width='100%' height='800px' frameborder='0'></iframe>";
         } else {
             $tabcontent = get_string('view_ia_notfound', 'mod_cloudstudio');
         }
     }
 }
 if ($cloudstudio->mapamental || $isteacher) {
-    $tabs[] = new tabobject("mapamental", new moodle_url($url, ['tab' => 'mapamental']), get_string('view_mapamental', 'mod_cloudstudio'));
+    $url = new moodle_url($url, ['tab' => 'mapamental']);
+    $tabs[] = new tabobject("mapamental", $url, get_string('view_mapamental', 'mod_cloudstudio'));
     if ($tab == "mapamental") {
         $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/mapamental");
         $json = json_decode($json);
@@ -159,7 +161,8 @@ if ($cloudstudio->mapamental || $isteacher) {
     }
 }
 if ($isteacher) {
-    $tabs[] = new tabobject("sugestao", new moodle_url($url, ['tab' => 'sugestao']), get_string('view_sugestao', 'mod_cloudstudio'));
+    $url = new moodle_url($url, ['tab' => 'sugestao']);
+    $tabs[] = new tabobject("sugestao", $url, get_string('view_sugestao', 'mod_cloudstudio'));
     if ($tab == "sugestao") {
         $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/sugestao");
         $json = json_decode($json);

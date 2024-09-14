@@ -16,6 +16,10 @@
 
 /**
  * Cloudstudio View implementation for mod_cloudstudio.
+ *
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_cloudstudio\report;
@@ -23,10 +27,11 @@ namespace mod_cloudstudio\report;
 use html_writer;
 use moodle_url;
 
+
 /**
- * @package   mod_cloudstudio
- * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Class cloudstudio_view
+ *
+ * @package mod_cloudstudio\report
  */
 class cloudstudio_view extends \table_sql {
 

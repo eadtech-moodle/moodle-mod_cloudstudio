@@ -15,7 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for mod_cloudstudio.
+ * The mod_cloudstudio module does not store any data.
+ *
+ * @package   mod_cloudstudio
+ * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_cloudstudio\privacy;
@@ -32,12 +36,11 @@ use core_privacy\local\request\transform;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 
+
 /**
- * The mod_cloudstudio module does not store any data.
+ * Class provider
  *
- * @package   mod_cloudstudio
- * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package mod_cloudstudio\privacy
  */
 class provider implements
     \core_privacy\local\metadata\provider,

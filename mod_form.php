@@ -152,6 +152,8 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
     }
 
     /**
+     * Function add_completion_rules_oold
+     *
      * @return array
      * @throws coding_exception
      */
