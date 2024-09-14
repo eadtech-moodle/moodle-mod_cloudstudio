@@ -61,7 +61,7 @@ class mobile {
                                  allow=":encrypted-media; :picture-in-picture; microphone; camera"
                                  src="' . $url . '"></iframe>',
                 ],
-            ]
+            ],
         ];
     }
 
