@@ -26,7 +26,7 @@ $addons = [
                     'icon' => $CFG->wwwroot . '/mod/cloudstudio/pix/icon.svg',
                     'class' => '',
                 ],
-            ]
-        ]
-    ]
+            ],
+        ],
+    ],
 ];

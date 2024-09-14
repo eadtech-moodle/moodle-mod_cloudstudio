@@ -56,10 +56,10 @@ require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/cloudstudio:view', $context);
 
-$event = course_module_viewed::create(array(
+$event = course_module_viewed::create([
     'objectid' => $PAGE->cm->instance,
     'context' => $PAGE->context,
-));
+]);
 $event->add_record_snapshot('course', $PAGE->course);
 $event->add_record_snapshot($PAGE->cm->modname, $cloudstudio);
 $event->trigger();
@@ -85,16 +85,15 @@ if ($mobile) {
 
 echo $OUTPUT->header();
 
-$isTeacher = has_capability('moodle/course:manageactivities', $context);
+$isteacher = has_capability('moodle/course:manageactivities', $context);
 
 $linkreport = "";
-if ($isTeacher) {
+if ($isteacher) {
     $linkreport = "<a class='cloudstudio-report-link' href='report.php?id={$cm->id}'>" .
         get_string('report_title', 'mod_cloudstudio') . "</a>";
 }
 $title = format_string($cloudstudio->name);
 echo $OUTPUT->heading("<span class='cloudstudioheading-title'>{$title}</span> {$linkreport}", 2, 'main', 'cloudstudioheading');
-
 
 $config = get_config('cloudstudio');
 $style = "";
@@ -125,48 +124,50 @@ $tab = optional_param('tab', "livro", PARAM_TEXT);
 $config = get_config('cloudstudio');
 $url = "/mod/cloudstudio/view.php?id={$id}";
 $tabs = [];
-$tab_content = "";
-if ($cloudstudio->livro || $isTeacher) {
+$tabcontent = "";
+if ($cloudstudio->livro || $isteacher) {
     $tabs[] = new tabobject("livro", new moodle_url($url, ['tab' => 'livro']), get_string('view_livro', 'mod_cloudstudio'));
     if ($tab == "livro") {
         $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/livro");
         $json = json_decode($json);
 
         if (isset($json->data) && isset($json->data->url)) {
-            $tab_content = "<iframe src='{$config->urlcloudstidio}vendor/pdfjs/web/viewer.html?file={$json->data->url}' width='100%' height='800px' frameborder='0'></iframe>";
+            $tabcontent = "<iframe src='{$config->urlcloudstidio}vendor/pdfjs/web/viewer.html?file={$json->data->url}' width='100%' height='800px' frameborder='0'></iframe>";
         } else {
-            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+            $tabcontent = get_string('view_ia_notfound', 'mod_cloudstudio');
         }
     }
 }
-if ($cloudstudio->mapamental || $isTeacher) {
+if ($cloudstudio->mapamental || $isteacher) {
     $tabs[] = new tabobject("mapamental", new moodle_url($url, ['tab' => 'mapamental']), get_string('view_mapamental', 'mod_cloudstudio'));
     if ($tab == "mapamental") {
         $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/mapamental");
         $json = json_decode($json);
 
         if (isset($json->data) && isset($json->data->mapamental)) {
-            $tab_content = $OUTPUT->render_from_template('mod_cloudstudio/tab/mapamental', [
-                'mapaheight' => $json->data->mapaheight * 1.3,
-                'markdown' => $json->data->mapamental,
-                'urlcloudstidio' => $config->urlcloudstidio,
-                'identificador' => cloudstudio_api::identificador($cloudstudio->identificador),
-            ]);
+            $mapaheight = $json->data->mapaheight * 1.3;
+            $urlcloudstidio = $config->urlcloudstidio;
+            $identificador = cloudstudio_api::identificador($cloudstudio->identificador);
+            $tabcontent =
+                "<iframe src='{$urlcloudstidio}Share/mapamental/{$identificador}?hidelink=1'
+                         width='100%' height='800px' frameborder='0'
+                         sandbox=\"allow-scripts allow-same-origin allow-popups\"
+                         style=\"height:{$mapaheight}px\"></iframe>";
         } else {
-            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+            $tabcontent = get_string('view_ia_notfound', 'mod_cloudstudio');
         }
     }
 }
-if ($isTeacher) {
+if ($isteacher) {
     $tabs[] = new tabobject("sugestao", new moodle_url($url, ['tab' => 'sugestao']), get_string('view_sugestao', 'mod_cloudstudio'));
     if ($tab == "sugestao") {
         $json = cloudstudio_api::get("Ai/{$cloudstudio->identificador}/sugestao");
         $json = json_decode($json);
 
         if (isset($json->data) && isset($json->data[0])) {
-            $tab_content = $OUTPUT->render_from_template('mod_cloudstudio/tab/sugestao', $json);
+            $tabcontent = $OUTPUT->render_from_template('mod_cloudstudio/tab/sugestao', $json);
         } else {
-            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+            $tabcontent = get_string('view_ia_notfound', 'mod_cloudstudio');
         }
     }
 
@@ -176,9 +177,9 @@ if ($isTeacher) {
         $json = json_decode($json);
 
         if (isset($json->data) && isset($json->data[0])) {
-            $tab_content = $OUTPUT->render_from_template('mod_cloudstudio/tab/licao', $json);
+            $tabcontent = $OUTPUT->render_from_template('mod_cloudstudio/tab/licao', $json);
         } else {
-            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+            $tabcontent = get_string('view_ia_notfound', 'mod_cloudstudio');
         }
     }
 
@@ -188,16 +189,15 @@ if ($isTeacher) {
         $json = json_decode($json);
 
         if (isset($json->data) && isset($json->data[0])) {
-            $tab_content = $OUTPUT->render_from_template('mod_cloudstudio/tab/short', $json);
+            $tabcontent = $OUTPUT->render_from_template('mod_cloudstudio/tab/short', $json);
         } else {
-            $tab_content = get_string('view_ia_notfound', 'mod_cloudstudio');
+            $tabcontent = get_string('view_ia_notfound', 'mod_cloudstudio');
         }
     }
 }
 
 echo $OUTPUT->tabtree($tabs, $tab);
-echo $tab_content;
-
+echo $tabcontent;
 
 echo '</div>';
 

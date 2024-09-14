@@ -28,9 +28,12 @@ use core_completion\activity_custom_completion;
 class custom_completion extends activity_custom_completion {
 
     /**
-     * @param string $rule The completion rule.
-     * @return int The completion state.
-     * @throws \Exception
+     * Function get_state
+     *
+     * @param string $rule
+     *
+     * @return int
+     * @throws \dml_exception
      */
     public function get_state(string $rule): int {
         global $DB;

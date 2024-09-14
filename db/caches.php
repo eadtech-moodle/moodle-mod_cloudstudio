@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 $definitions = [
     "cloudstudio_api_get" => [
         "mode" => cache_store::MODE_APPLICATION,
-        'ttl' => 10 * 60 * 60, // 10hs
+        'ttl' => 10 * 60 * 60, // 10hs.
         'staticacceleration' => true,
     ],
 ];

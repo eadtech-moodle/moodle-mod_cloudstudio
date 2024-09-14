@@ -41,7 +41,6 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
             $(window).resize(_resizePage);
             _resizePage();
 
-
             var element = $("#cloudstudio_area_embed");
             var lastWidth = element.width();
             setInterval(function() {
@@ -61,9 +60,9 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
 
             function _resizePage() {
 
-                var $cloudstudio_area_embed = $("#cloudstudio_area_embed");
+                var $cloudstudioareaembed = $("#cloudstudio_area_embed");
 
-                $cloudstudio_area_embed.css({
+                $cloudstudioareaembed.css({
                     "max-height" : "inherit",
                     "height"     : "inherit",
                 });
@@ -73,8 +72,8 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
 
                 var player_max_height = window_height - header_height;
 
-                if ($cloudstudio_area_embed.height() > player_max_height) {
-                    $cloudstudio_area_embed.css({
+                if ($cloudstudioareaembed.height() > player_max_height) {
+                    $cloudstudioareaembed.css({
                         "max-height" : player_max_height,
                         "height"     : player_max_height
                     });
@@ -172,8 +171,8 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
                 } else {
                     progress._internal_assistido[i] = 0;
                 }
-                var $mapa_item = $("<div id='mapa-visualizacao-" + i + "'>");
-                $mapa.append($mapa_item);
+                var $mapaitem = $("<div id='mapa-visualizacao-" + i + "'>");
+                $mapa.append($mapaitem);
 
                 // Mapa Clique
                 var mapaTitle = Math.floor(duration / progress._internal_progress_length * i);
@@ -186,7 +185,7 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
                 if (hours) {
                     tempo = hours + ":" + minutes + ":" + seconds;
                 }
-                var $mapa_clique =
+                var $mapaclique =
                         $("<div id='mapa-visualizacao-" + i + "'>")
                             .attr("title", 'Ir para ' + tempo)
                             .attr("data-currenttime", mapaTitle)
@@ -198,7 +197,7 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
                                 event.initCustomEvent('setCurrentTime', true, true, {goCurrentTime : _setCurrentTime});
                                 document.dispatchEvent(event);
                             });
-                $("#mapa-visualizacao .clique").append($mapa_clique);
+                $("#mapa-visualizacao .clique").append($mapaclique);
             }
         },
 

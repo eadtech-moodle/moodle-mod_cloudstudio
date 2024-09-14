@@ -7,17 +7,31 @@
 
 namespace mod_cloudstudio\util;
 
-
+/**
+ * Class cloudstudio_api
+ *
+ * @package mod_cloudstudio\util
+ */
 class cloudstudio_api {
 
+    /**
+     * Function identificador
+     *
+     * @param $identificador
+     *
+     * @return mixed
+     */
     public static function identificador($identificador) {
         return str_replace("-", "_", $identificador);
     }
 
     /**
-     * @param string $metodth
+     * Function get
+     *
+     * @param $metodth
      * @param array $params
-     * @return bool|string
+     *
+     * @return bool|mixed
      * @throws \dml_exception
      */
     public static function get($metodth, $params = []) {

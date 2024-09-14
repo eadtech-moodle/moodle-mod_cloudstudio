@@ -31,9 +31,9 @@ $course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 
 require_course_login($course);
 
-$params = array(
-    'context' => context_course::instance($course->id)
-);
+$params = [
+    'context' => context_course::instance($course->id),
+];
 $event = \mod_cloudstudio\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();

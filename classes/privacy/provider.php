@@ -232,7 +232,6 @@ class provider implements
         $DB->delete_records_select('cloudstudio_view', $sql, $params);
     }
 
-
     /**
      * Delete multiple users within a single context.
      *

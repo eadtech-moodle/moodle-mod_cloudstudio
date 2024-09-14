@@ -18,12 +18,20 @@ namespace mod_cloudstudio\output;
 
 use mod_cloudstudio;
 
+/**
+ * Class mobile
+ *
+ * @package mod_cloudstudio\output
+ */
 class mobile {
 
     /**
+     * Function mobile_course_view
+     *
      * @param $args
+     *
      * @return array
-     * @throws \Exception
+     * @throws \dml_exception
      */
     public static function mobile_course_view($args) {
         global $CFG, $OUTPUT, $USER;
@@ -31,26 +39,29 @@ class mobile {
         $cmid = $args['cmid'];
         $token = self::create_embed_token($USER->id);
 
-        $data = [
-            'cmid' => $cmid,
-            'wwwroot' => $CFG->wwwroot,
-            'user_id' => $USER->id,
-            'secret' => $token,
-            't' => time()
-        ];
-
+        $t=time();
+        $url = "{$CFG->wwwroot}/mod/cloudstudio/view.php?mobile=1&id={$cmid}&user_id={$USER->id}&secret={$token}&t={$t}" ;
         return [
             'templates' => [[
                 'id' => 'main',
-                'html' => $OUTPUT->render_from_template('mod_cloudstudio/mobile_view_page', $data),
+                'html' =>
+                    '<iframe id="cloudstudio_iframe"
+                             style="width:100%;height:100%;"
+                             frameborder="0" allowfullscreen
+                             sandbox="allow-scripts allow-same-origin allow-forms"
+                             allow=":encrypted-media; :picture-in-picture; microphone; camera"
+                             src="' . $url . '"></iframe>',
             ]]
         ];
     }
 
     /**
+     * Function create_embed_token
+     *
      * @param $userid
-     * @return string
-     * @throws \Exception
+     *
+     * @return bool|string
+     * @throws \dml_exception
      */
     private static function create_embed_token($userid) {
         global $DB;
@@ -69,10 +80,14 @@ class mobile {
     }
 
     /**
+     * Function valid_token
+     *
      * @param $userid
      * @param $secret
+     *
      * @return bool
-     * @throws \Exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
      */
     public static function valid_token($userid, $secret) {
         global $DB;
@@ -81,10 +96,10 @@ class mobile {
         $where = ['threshold' => time() - 60];
         $DB->delete_records_select('cloudstudio_auth', 'created_at < :threshold', $where);
 
-        $auth = $DB->get_record('cloudstudio_auth', array(
+        $auth = $DB->get_record('cloudstudio_auth', [
             'user_id' => $userid,
             'secret' => $secret,
-        ));
+        ]);
 
         if ($auth) {
             $user = get_complete_user_data('id', $userid);

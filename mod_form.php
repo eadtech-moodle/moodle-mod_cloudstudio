@@ -68,7 +68,6 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
         $mform->addRule('identificador', null, 'required', null, 'client');
         $mform->addHelpButton('identificador', 'identificador', 'mod_cloudstudio');
 
-
         $options = [
             1 => get_string('yes'),
             0 => get_string('no'),
@@ -99,7 +98,6 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
             grade_get_categories_menu($COURSE->id, false));
         $mform->addHelpButton('gradecat', 'gradecategoryonmodform', 'grades');
         $mform->hideIf('gradecat', 'grade_approval', 'eq', '0');
-
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
@@ -193,22 +191,26 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
     }
 
     /**
+     * Function completion_rule_enabled
+     *
      * @param array $data
+     *
      * @return bool
      */
     public function completion_rule_enabled($data) {
         return ($data['completionpercent'] > 0);
     }
 
-
     /**
+     * Function validation
+     *
      * @param $data
      * @param $files
+     *
      * @return array
      * @throws coding_exception
      */
     public function validation($data, $files) {
-
         $errors = parent::validation($data, $files);
         if (!isset($data['identificador']) || empty($data['identificador'])) {
             $errors['identificador'] = get_string('required');

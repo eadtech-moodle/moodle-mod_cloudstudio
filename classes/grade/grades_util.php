@@ -20,11 +20,18 @@
 
 namespace mod_cloudstudio\grade;
 
+/**
+ * Class grades_util
+ *
+ * @package mod_cloudstudio\grade
+ */
 class grades_util {
 
     /**
-     * @param int $cmid
-     * @param int $percent
+     * Function update
+     *
+     * @param $cmid
+     * @param $percent
      *
      * @throws \coding_exception
      * @throws \dml_exception

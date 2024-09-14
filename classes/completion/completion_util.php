@@ -22,13 +22,19 @@
 
 namespace mod_cloudstudio\completion;
 
-
+/**
+ * Class completion_util
+ *
+ * @package mod_cloudstudio\completion
+ */
 class completion_util {
 
     /**
-     * @param \stdClass $course
-     * @param \stdClass $cm
-     * @param int $userid
+     * Function get_completion_state
+     *
+     * @param $course
+     * @param $cm
+     * @param $userid
      *
      * @return bool
      * @throws \dml_exception

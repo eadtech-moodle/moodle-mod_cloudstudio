@@ -28,10 +28,13 @@ use mod_cloudstudio\grade\grades_util;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cloudstudio_view {
+
     /**
+     * Function create
+     *
      * @param $cmid
      *
-     * @return object
+     * @return mixed|object
      * @throws \dml_exception
      */
     public static function create($cmid) {
@@ -52,6 +55,13 @@ class cloudstudio_view {
         return self::_create($cmid);
     }
 
+    /**
+     * Function _create
+     *
+     * @param $cmid
+     *
+     * @return object
+     */
     private static function _create($cmid) {
         global $USER, $DB;
 

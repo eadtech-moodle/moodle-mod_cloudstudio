@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * The Web service script that is called from the filepicker front end
  *
@@ -32,7 +31,7 @@ require_once(__DIR__ . '/../../repository/lib.php');
 
 // Parameters
 $action = required_param('action', PARAM_ALPHA);
-$saveas_filename = optional_param('title', '', PARAM_FILE);     // save as file name
+$saveasfilename = optional_param('title', '', PARAM_FILE);     // save as file name
 
 $context = context_user::instance($USER->id);
 $PAGE->set_context($context);
@@ -43,13 +42,13 @@ if (empty($_POST) && !empty($action)) {
 }
 
 ajax_capture_output();
-$repo_user = $DB->get_record('repository', ['type' => 'upload']);
+$repouser = $DB->get_record('repository', ['type' => 'upload']);
 /** @var repository_upload $repo */
-$repo = repository::get_repository_by_id($repo_user->id, $context->id, ['ajax' => true, 'mimetypes' => '*']);
+$repo = repository::get_repository_by_id($repouser->id, $context->id, ['ajax' => true, 'mimetypes' => '*']);
 
 switch ($action) {
     case 'upload':
-        $result = $repo->upload($saveas_filename, -1);
+        $result = $repo->upload($saveasfilename, -1);
         echo json_encode($result);
         break;
     case 'list':

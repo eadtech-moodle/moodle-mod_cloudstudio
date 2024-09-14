@@ -61,7 +61,6 @@ function cloudstudio_supports($feature) {
     }
 }
 
-
 /**
  * @param stdClass $cloudstudio
  * @param int $userid
@@ -444,7 +443,6 @@ function cloudstudio_pluginfile($course, $cm, context $context, $filearea, $args
         $itemid = $args[1];
         $filename = $args[2];
 
-
         $fs = get_file_storage();
 
         $file = $fs->get_file($context->id, 'user', $filearea, $itemid, "/{$filepath}", $filename);
@@ -527,7 +525,6 @@ function cloudstudio_dndupload_register() {
     return $ret;
 }
 
-
 /**
  * Handle a file that has been uploaded
  *
@@ -568,13 +565,13 @@ function cloudstudio_dndupload_handle($uploadinfo) {
         curl_setopt($ch, CURLOPT_URL, "{$config->urlcloudstidio}api/v1/Envio");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        $post = array(
+        $post = [
             'file' => '@' . realpath($_FILES['repo_upload_file']['tmp_name']),
             //'pasta' => "",
             'titulo' => optional_param("title", "", PARAM_RAW),
             'descricao' => optional_param('descricao', "", PARAM_RAW),
             'identificador' => optional_param('identificador', "", PARAM_RAW),
-        );
+        ];
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, [

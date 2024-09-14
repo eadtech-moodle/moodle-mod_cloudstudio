@@ -21,7 +21,6 @@
 namespace mod_cloudstudio\report;
 
 use html_writer;
-use mod_cloudstudio\util\url;
 use moodle_url;
 
 /**
@@ -45,9 +44,11 @@ class cloudstudio_view extends \table_sql {
      *
      * @param $uniqueid
      * @param $cmid
+     * @param $userid
      * @param $cloudstudio
      *
      * @throws \coding_exception
+     * @throws \dml_exception
      */
     public function __construct($uniqueid, $cmid, $userid, $cloudstudio) {
         global $DB;
@@ -165,6 +166,8 @@ class cloudstudio_view extends \table_sql {
     }
 
     /**
+     * Function col_currenttime
+     *
      * @param $linha
      *
      * @return string
@@ -181,6 +184,8 @@ class cloudstudio_view extends \table_sql {
     }
 
     /**
+     * Function col_duration
+     *
      * @param $linha
      *
      * @return string
@@ -197,6 +202,8 @@ class cloudstudio_view extends \table_sql {
     }
 
     /**
+     * Function col_percent
+     *
      * @param $linha
      *
      * @return string
@@ -206,6 +213,8 @@ class cloudstudio_view extends \table_sql {
     }
 
     /**
+     * Function col_mapa
+     *
      * @param $linha
      *
      * @return string
@@ -227,6 +236,8 @@ class cloudstudio_view extends \table_sql {
     }
 
     /**
+     * Function col_timecreated
+     *
      * @param $linha
      *
      * @return string
@@ -236,6 +247,8 @@ class cloudstudio_view extends \table_sql {
     }
 
     /**
+     * Function col_timemodified
+     *
      * @param $linha
      *
      * @return string
@@ -245,6 +258,8 @@ class cloudstudio_view extends \table_sql {
     }
 
     /**
+     * Function col_extra
+     *
      * @param $linha
      *
      * @return string
@@ -257,6 +272,8 @@ class cloudstudio_view extends \table_sql {
     }
 
     /**
+     * Function query_db
+     *
      * @param int $pagesize
      * @param bool $useinitialsbar
      *
