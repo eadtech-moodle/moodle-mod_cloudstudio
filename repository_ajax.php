@@ -17,8 +17,7 @@
 /**
  * The Web service script that is called from the filepicker front end
  *
- * @since      Moodle 2.0
- * @package    repository
+ * @package    mod_cloudstudio
  * @copyright  2009 Dongsheng Cai {@link http://dongsheng.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,7 +31,7 @@ require_once(__DIR__ . '/../../repository/lib.php');
 require_login();
 require_capability('mod/cloudstudio:addinstance');
 
-// Parameters
+// Parameters.
 $action = required_param('action', PARAM_ALPHA);
 $saveasfilename = optional_param('title', '', PARAM_FILE); // Save as file name.
 

@@ -142,6 +142,7 @@ class cloudstudio_view extends \table_sql {
     /**
      * Fullname is treated as a special columname in tablelib and should always
      * be treated the same as the fullname of a user.
+     *
      * @uses $this->useridfield if the userid field is not expected to be id
      * then you need to override $this->useridfield to point at the correct
      * field for the user id.
@@ -229,7 +230,9 @@ class cloudstudio_view extends \table_sql {
 
         $mapas = json_decode($linha->mapa);
         foreach ($mapas as $id => $mapa) {
-            if ($id == 0) continue;
+            if ($id == 0) {
+                continue;
+            }
             if ($mapa) {
                 $htmlmapa .= "<div id='mapa-visualizacao-" . $id . "' style='opacity:1'></div>";
             } else {

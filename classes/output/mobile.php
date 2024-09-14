@@ -17,7 +17,7 @@
 /**
  * Mobile api
  *
- * @package mod_cloudstudio
+ * @package   mod_cloudstudio
  * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -47,19 +47,21 @@ class mobile {
         $cmid = $args['cmid'];
         $token = self::create_embed_token($USER->id);
 
-        $t=time();
-        $url = "{$CFG->wwwroot}/mod/cloudstudio/view.php?mobile=1&id={$cmid}&user_id={$USER->id}&secret={$token}&t={$t}" ;
+        $t = time();
+        $url = "{$CFG->wwwroot}/mod/cloudstudio/view.php?mobile=1&id={$cmid}&user_id={$USER->id}&secret={$token}&t={$t}";
         return [
-            'templates' => [[
-                'id' => 'main',
-                'html' =>
-                    '<iframe id="cloudstudio_iframe"
-                             style="width:100%;height:100%;"
-                             frameborder="0" allowfullscreen
-                             sandbox="allow-scripts allow-same-origin allow-forms"
-                             allow=":encrypted-media; :picture-in-picture; microphone; camera"
-                             src="' . $url . '"></iframe>',
-            ]]
+            'templates' => [
+                [
+                    'id' => 'main',
+                    'html' =>
+                        '<iframe id="cloudstudio_iframe"
+                                 style="width:100%;height:100%;"
+                                 frameborder="0" allowfullscreen
+                                 sandbox="allow-scripts allow-same-origin allow-forms"
+                                 allow=":encrypted-media; :picture-in-picture; microphone; camera"
+                                 src="' . $url . '"></iframe>',
+                ],
+            ]
         ];
     }
 
@@ -80,7 +82,7 @@ class mobile {
         $data = (object)[
             'user_id' => $userid,
             'secret' => $token,
-            'created_at' => time()
+            'created_at' => time(),
         ];
         $DB->insert_record('cloudstudio_auth', $data);
 

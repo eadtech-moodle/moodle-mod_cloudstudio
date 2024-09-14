@@ -129,7 +129,7 @@ function cloudstudio_get_user_grades($cloudstudio, $userid = 0) {
  * @throws coding_exception
  * @throws dml_exception
  */
-function cloudstudio_add_instance(stdClass $cloudstudio, mod_cloudstudio_mod_form $mform = null) {
+function cloudstudio_add_instance(stdClass $cloudstudio, $mform = null) {
     global $DB;
 
     $cloudstudio->timemodified = time();
@@ -154,7 +154,7 @@ function cloudstudio_add_instance(stdClass $cloudstudio, mod_cloudstudio_mod_for
  * @throws dml_exception
  * @throws coding_exception
  */
-function cloudstudio_update_instance(stdClass $cloudstudio, mod_cloudstudio_mod_form $mform = null) {
+function cloudstudio_update_instance(stdClass $cloudstudio, $mform = null) {
     global $DB;
 
     $cloudstudio->timemodified = time();
@@ -356,7 +356,7 @@ function cloudstudio_before_standard_html_head() {
         SELECT cm.id, cm.instance
           FROM {course_modules} cm
           JOIN {modules}         m ON cm.module = m.id
-         WHERE cm.course = {$COURSE->id} 
+         WHERE cm.course = {$COURSE->id}
            AND m.name    = 'cloudstudio'";
     $modules = $DB->get_records_sql($sql);
 
@@ -528,20 +528,20 @@ function cloudstudio_dndupload_register() {
             [
                 'extension' => 'webm',
                 'message' => get_string('dnduploadlabel-mp4', 'mod_cloudstudio'),
-            ]
+            ],
         ],
         'types' => [
             [
                 'identifier' => 'text/html',
                 'message' => get_string('dnduploadlabeltext', 'mod_cloudstudio'),
-                'noname' => true
+                'noname' => true,
             ],
             [
                 'identifier' => 'text',
                 'message' => get_string('dnduploadlabeltext', 'mod_cloudstudio'),
-                'noname' => true
-            ]
-        ]
+                'noname' => true,
+            ],
+        ],
     ];
     return $ret;
 }
@@ -588,7 +588,6 @@ function cloudstudio_dndupload_handle($uploadinfo) {
         curl_setopt($ch, CURLOPT_POST, 1);
         $post = [
             'file' => '@' . realpath($_FILES['repo_upload_file']['tmp_name']),
-            //'pasta' => "",
             'titulo' => optional_param("title", "", PARAM_RAW),
             'descricao' => optional_param('descricao', "", PARAM_RAW),
             'identificador' => optional_param('identificador', "", PARAM_RAW),
@@ -596,7 +595,7 @@ function cloudstudio_dndupload_handle($uploadinfo) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: {$config->tokencloudstidio}"
+            "Authorization: {$config->tokencloudstidio}",
         ]);
 
         $result = curl_exec($ch);
@@ -670,7 +669,9 @@ function cloudstudio_dndupload_testupload($file) {
                 $erro = 'Erro 7: Falha em escrever o arquivo no HD. Provavelmente o HD esteja lotado ou com falhas.';
                 return ['message' => $erro, 'status' => false];
             case UPLOAD_ERR_EXTENSION:
-                $erro = 'Erro 8: Uma extensão do PHP interrompeu o upload do arquivo. O PHP não fornece uma maneira de determinar qual extensão causou a interrupção. Examinar a lista das extensões carregadas com o phpinfo() pode ajudar.';
+                $erro = 'Erro 8: Uma extensão do PHP interrompeu o upload do arquivo. ".
+                "O PHP não fornece uma maneira de determinar qual extensão causou a interrupção. ".
+                "Examinar a lista das extensões carregadas com o phpinfo() pode ajudar.';
                 return ['message' => $erro, 'status' => false];
             default:
                 $erro = 'Erro de Upload!';

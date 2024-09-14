@@ -132,7 +132,7 @@ if ($cloudstudio->livro || $isteacher) {
         $json = json_decode($json);
 
         if (isset($json->data) && isset($json->data->url)) {
-            $tabcontent = "<iframe src='{$config->urlcloudstidio}vendor/pdfjs/web/viewer.html?file={$json->data->url}' 
+            $tabcontent = "<iframe src='{$config->urlcloudstidio}vendor/pdfjs/web/viewer.html?file={$json->data->url}'
                                    width='100%' height='800px' frameborder='0'></iframe>";
         } else {
             $tabcontent = get_string('view_ia_notfound', 'mod_cloudstudio');

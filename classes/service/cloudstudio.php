@@ -32,6 +32,8 @@ global $CFG;
 require_once($CFG->libdir . '/externallib.php');
 
 /**
+ * Cloudstudio Service
+ *
  * @package   mod_cloudstudio
  * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

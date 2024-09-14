@@ -87,7 +87,7 @@ class grades_util {
     public static function grade_item_update($cloudstudio, $grades = null) {
         global $CFG;
 
-        require_once ("{$CFG->dirroot}/lib/gradelib.php");
+        require_once("{$CFG->dirroot}/lib/gradelib.php");
 
         if (!defined('GRADE_TYPE_VALUE')) {
             define('GRADE_TYPE_VALUE', 1);

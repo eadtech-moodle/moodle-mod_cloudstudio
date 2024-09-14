@@ -83,6 +83,20 @@ class cloudstudio_view {
         return $cloudstudioview;
     }
 
+    /**
+     * Function update
+     *
+     * @param $viewid
+     * @param $currenttime
+     * @param $duration
+     * @param $percent
+     * @param $mapa
+     *
+     * @return bool
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
     public static function update($viewid, $currenttime, $duration, $percent, $mapa) {
         global $DB, $USER, $CFG;
 
