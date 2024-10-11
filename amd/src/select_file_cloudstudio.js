@@ -1,6 +1,5 @@
 require(['jquery', 'core/ajax', 'core/notification', 'core/templates'],
     function($, Ajax, Notification, Templates) {
-
         return {
             load__cloudstudio_files : function(path, page, titulo) {
                 Ajax.call([{

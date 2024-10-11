@@ -345,7 +345,7 @@ function cloudstudio_get_coursemodule_info($coursemodule) {
  *
  * @throws dml_exception
  */
-function cloudstudio_before_standard_html_head() {
+function cloudstudio_before_footer() {
     global $COURSE, $DB;
 
     if ($COURSE->id == 1 || $COURSE->format != "tiles" || AJAX_SCRIPT) {

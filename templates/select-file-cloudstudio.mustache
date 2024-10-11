@@ -26,6 +26,8 @@
 
 {{#js}}
     require(['mod_cloudstudio/select_file_cloudstudio'], function(select) {
-        select.load__cloudstudio_files(0, 0, "");
+        if (document.getElementById("galery-files")) {
+            select.load__cloudstudio_files(0, 0, "");
+        }
     });
 {{/js}}
