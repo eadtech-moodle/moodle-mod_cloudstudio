@@ -27,7 +27,7 @@ namespace mod_cloudstudio\local\util;
 /**
  * Class cloudstudio_api
  *
- * @package mod_cloudstudio\local\util
+ * @package mod_cloudstudio\util
  */
 class cloudstudio_api {
 
@@ -49,20 +49,18 @@ class cloudstudio_api {
      * @param array $params
      *
      * @return bool|mixed
-     * @throws \coding_exception
      * @throws \dml_exception
      */
     public static function get($metodth, $params = []) {
         $params = http_build_query($params, '', '&');
 
+        $config = get_config('cloudstudio');
         $cache = \cache::make('mod_cloudstudio', 'cloudstudio_api_get');
-        if ($cache->has("{$metodth}-{$params}")) {
+        if ($cache->has("{$metodth}-{$params}-{$config->tokencloudstidio}")) {
             return $cache->get("{$metodth}-{$params}");
         }
 
-        $config = get_config('cloudstudio');
         if (isset($config->urlcloudstidio[10]) && isset($config->tokencloudstidio[10])) {
-
             $curl = new \curl();
             $curl->setopt([
                 'CURLOPT_HTTPHEADER' => [
