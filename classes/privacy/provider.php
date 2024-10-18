@@ -57,6 +57,9 @@ class provider implements
     public static function get_metadata(collection $collection): collection {
 
         $collection->add_database_table('cloudstudio_view', [
+            'aluno_matricula' => 'privacy:metadata:cloudstudio_view:user_id',
+            'aluno_nome' => 'privacy:metadata:cloudstudio_view:user_name',
+            'aluno_email' => 'privacy:metadata:cloudstudio_view:user_email',
             'cm_id' => 'privacy:metadata:cloudstudio_view:cm_id',
             'user_id' => 'privacy:metadata:cloudstudio_view:user_id',
             'currenttime' => 'privacy:metadata:cloudstudio_view:currenttime',
@@ -283,11 +286,11 @@ class provider implements
      * Loop and export from a recordset.
      *
      * @param moodle_recordset $recordset The recordset.
-     * @param string           $splitkey  The record key to determine when to export.
-     * @param mixed            $initial   The initial data to reduce from.
-     * @param callable         $reducer   The function to return the dataset, receives current dataset, and the current
+     * @param string $splitkey            The record key to determine when to export.
+     * @param mixed $initial              The initial data to reduce from.
+     * @param callable $reducer           The function to return the dataset, receives current dataset, and the current
      *                                    record.
-     * @param callable         $export    The function to export the dataset, receives the last value from $splitkey
+     * @param callable $export            The function to export the dataset, receives the last value from $splitkey
      *                                    and the dataset.
      *
      * @return void
