@@ -17,7 +17,7 @@
 /**
  * Cloudstudio api
  *
- * @package mod_cloudstudio
+ * @package   mod_cloudstudio
  * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -49,6 +49,7 @@ class cloudstudio_api {
      * @param array $params
      *
      * @return bool|mixed
+     * @throws \coding_exception
      * @throws \dml_exception
      */
     public static function get($metodth, $params = []) {
@@ -61,16 +62,12 @@ class cloudstudio_api {
 
         $config = get_config('cloudstudio');
         if (isset($config->urlcloudstidio[10]) && isset($config->tokencloudstidio[10])) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "{$config->urlcloudstidio}api/v1/{$metodth}?{$params}");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: {$config->tokencloudstidio}"]);
 
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                return false;
-            }
+            $curl = new \curl();
+            $curl->setopt([
+                "Authorization: {$config->tokencloudstidio}",
+            ]);
+            $result = $curl->get("{$config->urlcloudstidio}api/v1/{$metodth}?{$params}");
 
             $cache->set("{$metodth}-{$params}", $result);
             return $result;
