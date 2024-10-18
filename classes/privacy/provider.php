@@ -56,19 +56,24 @@ class provider implements
      */
     public static function get_metadata(collection $collection): collection {
 
-        $collection->add_database_table('cloudstudio_view', [
-            'aluno_matricula' => 'privacy:metadata:cloudstudio_view:user_id',
-            'aluno_nome' => 'privacy:metadata:cloudstudio_view:user_name',
-            'aluno_email' => 'privacy:metadata:cloudstudio_view:user_email',
-            'cm_id' => 'privacy:metadata:cloudstudio_view:cm_id',
-            'user_id' => 'privacy:metadata:cloudstudio_view:user_id',
-            'currenttime' => 'privacy:metadata:cloudstudio_view:currenttime',
-            'duration' => 'privacy:metadata:cloudstudio_view:duration',
-            'percent' => 'privacy:metadata:cloudstudio_view:percent',
-            'mapa' => 'privacy:metadata:cloudstudio_view:mapa',
-            'timecreated' => 'privacy:metadata:cloudstudio_view:timecreated',
-            'timemodified' => 'privacy:metadata:cloudstudio_view:timemodified',
-        ], 'privacy:metadata:cloudstudio_view');
+        $collection->add_external_location_link(
+            'cloudstudio.com.br',
+            [
+                'aluno_matricula' => 'privacy:metadata:cloudstudio_view:user_id',
+                'aluno_nome' => 'privacy:metadata:cloudstudio_view:user_name',
+                'aluno_email' => 'privacy:metadata:cloudstudio_view:user_email',
+                'cm_id' => 'privacy:metadata:cloudstudio_view:cm_id',
+                'user_id' => 'privacy:metadata:cloudstudio_view:user_id',
+                'currenttime' => 'privacy:metadata:cloudstudio_view:currenttime',
+                'duration' => 'privacy:metadata:cloudstudio_view:duration',
+                'percent' => 'privacy:metadata:cloudstudio_view:percent',
+                'mapa' => 'privacy:metadata:cloudstudio_view:mapa',
+                'timecreated' => 'privacy:metadata:cloudstudio_view:timecreated',
+                'timemodified' => 'privacy:metadata:cloudstudio_view:timemodified',
+            ],
+            'privacy:metadata:cloudstudio_view',
+            );
+
 
         return $collection;
     }
