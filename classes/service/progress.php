@@ -26,7 +26,7 @@ namespace mod_cloudstudio\service;
 
 use external_function_parameters;
 use external_single_structure;
-use mod_cloudstudio\analytics\cloudstudio_view;
+use mod_cloudstudio\local\analytics\cloudstudio_view;
 
 defined('MOODLE_INTERNAL') || die;
 

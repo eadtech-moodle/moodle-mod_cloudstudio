@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_cloudstudio\report;
+namespace mod_cloudstudio\local\report;
 
 use html_writer;
 use moodle_url;
@@ -31,7 +31,7 @@ use moodle_url;
 /**
  * Class cloudstudio_view
  *
- * @package mod_cloudstudio\report
+ * @package mod_cloudstudio\local\report
  */
 class cloudstudio_view extends \table_sql {
 

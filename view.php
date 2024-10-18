@@ -22,10 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_cloudstudio\analytics\cloudstudio_view;
+use mod_cloudstudio\local\analytics\cloudstudio_view;
 use mod_cloudstudio\event\course_module_viewed;
 use mod_cloudstudio\output\mobile;
-use mod_cloudstudio\util\cloudstudio_api;
+use mod_cloudstudio\local\util\cloudstudio_api;
 
 require_once('../../config.php');
 require_once($CFG->libdir . '/completionlib.php');

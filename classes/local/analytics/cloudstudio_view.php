@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace mod_cloudstudio\analytics;
+namespace mod_cloudstudio\local\analytics;
 
-use mod_cloudstudio\grade\grades_util;
+use mod_cloudstudio\local\grade\grades_util;
 
 /**
  * Cloudstudio View implementation for mod_cloudstudio.

@@ -22,12 +22,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_cloudstudio\util;
+namespace mod_cloudstudio\local\util;
 
 /**
  * Class cloudstudio_api
  *
- * @package mod_cloudstudio\util
+ * @package mod_cloudstudio\local\util
  */
 class cloudstudio_api {
 

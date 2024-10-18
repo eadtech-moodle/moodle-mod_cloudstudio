@@ -22,12 +22,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_cloudstudio\grade;
+namespace mod_cloudstudio\local\grade;
 
 /**
  * Class grades_util
  *
- * @package mod_cloudstudio\grade
+ * @package mod_cloudstudio\local\grade
  */
 class grades_util {
 

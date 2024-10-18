@@ -24,8 +24,7 @@
 
 namespace mod_cloudstudio\service;
 
-use context_course;
-use mod_cloudstudio\util\cloudstudio_api;
+use mod_cloudstudio\local\util\cloudstudio_api;
 
 defined('MOODLE_INTERNAL') || die;
 

@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_cloudstudio\util\cloudstudio_api;
+use mod_cloudstudio\local\util\cloudstudio_api;
 
 /**
  * Function cloudstudio_supports
@@ -79,7 +79,7 @@ function cloudstudio_update_grades($cloudstudio, $userid = 0, $nullifnone = true
 
     if ($cloudstudio->grade_approval) {
         if ($grades = cloudstudio_get_user_grades($cloudstudio, $userid)) {
-            \mod_cloudstudio\grade\grades_util::grade_item_update($cloudstudio, $grades);
+            \mod_cloudstudio\local\grade\grades_util::grade_item_update($cloudstudio, $grades);
         }
     }
 }
@@ -139,7 +139,7 @@ function cloudstudio_add_instance(stdClass $cloudstudio, $mform = null) {
 
     $cloudstudio->id = $DB->insert_record('cloudstudio', $cloudstudio);
 
-    \mod_cloudstudio\grade\grades_util::grade_item_update($cloudstudio);
+    \mod_cloudstudio\local\grade\grades_util::grade_item_update($cloudstudio);
 
     return $cloudstudio->id;
 }
@@ -164,7 +164,7 @@ function cloudstudio_update_instance(stdClass $cloudstudio, $mform = null) {
 
     $result = $DB->update_record('cloudstudio', $cloudstudio);
 
-    \mod_cloudstudio\grade\grades_util::grade_item_update($cloudstudio);
+    \mod_cloudstudio\local\grade\grades_util::grade_item_update($cloudstudio);
 
     return $result;
 }

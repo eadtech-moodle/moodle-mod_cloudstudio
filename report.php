@@ -39,7 +39,7 @@ if (!has_capability('moodle/course:manageactivities', $context, $USER)) {
     $userid = $USER->id;
 }
 
-$table = new \mod_cloudstudio\report\cloudstudio_view("cloudstudio_report", $cm->id, $userid, $cloudstudio);
+$table = new \mod_cloudstudio\local\report\cloudstudio_view("cloudstudio_report", $cm->id, $userid, $cloudstudio);
 
 if (!$table->is_downloading()) {
     $PAGE->set_url('/mod/cloudstudio/report.php', ['id' => $cm->id]);
