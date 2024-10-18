@@ -65,7 +65,9 @@ class cloudstudio_api {
 
             $curl = new \curl();
             $curl->setopt([
-                "Authorization: {$config->tokencloudstidio}",
+                'CURLOPT_HTTPHEADER' => [
+                    "Authorization" => "{$config->tokencloudstidio}",
+                ],
             ]);
             $result = $curl->get("{$config->urlcloudstidio}api/v1/{$metodth}?{$params}");
 
