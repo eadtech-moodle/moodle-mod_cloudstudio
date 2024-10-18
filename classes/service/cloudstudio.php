@@ -17,13 +17,14 @@
 /**
  * Cloudstudio Service
  *
- * @package mod_cloudstudio
+ * @package   mod_cloudstudio
  * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_cloudstudio\service;
 
+use context_course;
 use mod_cloudstudio\util\cloudstudio_api;
 
 defined('MOODLE_INTERNAL') || die;
@@ -58,10 +59,16 @@ class cloudstudio extends \external_api {
      * @param int $path
      * @param int $page
      * @param string $titulo
+     *
      * @return array
-     * @throws \dml_exception
+     * @throws \dml_exception*@throws \required_capability_exception
+     * @throws \required_capability_exception
      */
     public static function files($path = 0, $page = 0, $titulo = "") {
+        global $USER;
+
+        $context = \context_user::instance($USER->id);
+        require_capability('mod/cloudstudio:addinstance', $context);
 
         $config = get_config('cloudstudio');
         if (isset($config->urlcloudstidio[10]) && isset($config->tokencloudstidio[10])) {

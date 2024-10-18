@@ -73,21 +73,30 @@ class progress extends \external_api {
      * @throws \moodle_exception
      */
     public static function save($viewid, $currenttime, $duration, $percent, $mapa) {
+        global $DB;
 
-        $params = self::validate_parameters(self::save_parameters(), [
-            'view_id' => $viewid,
-            'currenttime' => $currenttime,
-            'duration' => $duration,
-            'percent' => $percent,
-            'mapa' => $mapa,
-        ]);
-        $viewid = $params['view_id'];
-        $currenttime = $params['currenttime'];
-        $duration = $params['duration'];
-        $percent = $params['percent'];
+        $cloudstudioview = $DB->get_record("cloudstudio_view", ["id" => $viewid]);
+        if ($cloudstudioview) {
+            $context = \context_module::instance($cloudstudioview->cm_id);
+            self::validate_context($context);
+            require_capability('mod/cloudstudio:view', $context);
 
-        cloudstudio_view::update($viewid, $currenttime, $duration, $percent, $mapa);
-        return ['success' => true, 'exec' => "OK"];
+            $params = self::validate_parameters(self::save_parameters(), [
+                'view_id' => $viewid,
+                'currenttime' => $currenttime,
+                'duration' => $duration,
+                'percent' => $percent,
+                'mapa' => $mapa,
+            ]);
+            $viewid = $params['view_id'];
+            $currenttime = $params['currenttime'];
+            $duration = $params['duration'];
+            $percent = $params['percent'];
+
+            cloudstudio_view::update($viewid, $currenttime, $duration, $percent, $mapa);
+            return ['success' => true, 'exec' => "OK"];
+        }
+        return ['success' => false, 'exec' => "notFound"];
     }
 
     /**

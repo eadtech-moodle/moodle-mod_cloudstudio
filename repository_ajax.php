@@ -29,13 +29,13 @@ require_once(__DIR__ . '/../../lib/filelib.php');
 require_once(__DIR__ . '/../../repository/lib.php');
 
 require_login();
-require_capability('mod/cloudstudio:addinstance');
+$context = context_user::instance($USER->id);
+require_capability('mod/cloudstudio:addinstance', $context);
 
 // Parameters.
 $action = required_param('action', PARAM_ALPHA);
 $saveasfilename = optional_param('title', '', PARAM_FILE); // Save as file name.
 
-$context = context_user::instance($USER->id);
 $PAGE->set_context($context);
 
 if (empty($_POST) && !empty($action)) {
