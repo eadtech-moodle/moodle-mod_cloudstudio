@@ -247,7 +247,6 @@ class provider implements
 
         $context = $userlist->get_context();
         $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
-        $cloudstudio = $DB->get_record('cloudstudio', ['id' => $cm->instance]);
 
         list($userinsql, $userinparams) = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
         $params = array_merge(['cm_id' => $cm->id], $userinparams);

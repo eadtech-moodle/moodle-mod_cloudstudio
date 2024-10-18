@@ -42,7 +42,7 @@ class mobile {
      * @throws \dml_exception
      */
     public static function mobile_course_view($args) {
-        global $CFG, $OUTPUT, $USER;
+        global $CFG, $USER;
 
         $cmid = $args['cmid'];
         $token = self::create_embed_token($USER->id);

@@ -761,7 +761,7 @@ function cloudstudio_get_completion_state($course, $cm, $userid, $type) {
     if (isset($PAGE->cm->id) && $PAGE->cm->id == $cm->id) {
         $data = $PAGE->activityrecord;
     } else {
-        $data = $DB->get_record('data', ['id' => $cm->instance], '*', MUST_EXIST);
+        $data = $DB->get_record('cloudstudio', ['id' => $cm->instance], '*', MUST_EXIST);
     }
     // If completion option is enabled, evaluate it and return true/false.
     if ($data->completionpercent) {

@@ -39,17 +39,11 @@ class mod_cloudstudio_mod_form extends moodleform_mod {
      * Defines forms elements
      *
      * @throws coding_exception
-     * @throws dml_exception
      */
     public function definition() {
-        global $DB, $CFG, $PAGE, $COURSE, $USER;
+        global $CFG, $PAGE, $COURSE;
 
         $PAGE->requires->css('/mod/cloudstudio/style.css');
-
-        $cloudstudio = null;
-        if ($this->_cm && $this->_cm->instance) {
-            $cloudstudio = $DB->get_record("cloudstudio", ["id" => $this->_cm->instance]);
-        }
 
         $mform = $this->_form;
         $mform->updateAttributes(['enctype' => 'multipart/form-data']);
