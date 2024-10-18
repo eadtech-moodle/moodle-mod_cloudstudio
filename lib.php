@@ -702,7 +702,7 @@ function mod_cloudstudio_get_completion_active_rule_descriptions($cm) {
 
     $descriptions = [];
     $completionpercent = $cm->customdata['customcompletionrules']['completionpercent'] ?? 0;
-    $descriptions[] = "Requer {$completionpercent} %";
+    $descriptions[] = get_string("completionpercent_desc", "mod_cloudstudio", $completionpercent);
     return $descriptions;
 }
 
