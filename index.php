@@ -74,6 +74,12 @@ foreach ($modinfo->instances['cloudstudio'] as $cm) {
         if ($cm->sectionnum !== $currentsection) {
             if ($cm->sectionnum) {
                 $row[] = get_section_name($course, $cm->sectionnum);
+
+                $class = $cm->visible ? null : ['class' => 'dimmed'];
+
+                $row[] = html_writer::link(new moodle_url('view.php', ['id' => $cm->id]),
+                    $cm->get_formatted_name(), $class);
+                $table->data[] = $row;
             }
             if ($currentsection !== '') {
                 $table->data[] = 'hr';
@@ -81,12 +87,6 @@ foreach ($modinfo->instances['cloudstudio'] as $cm) {
             $currentsection = $cm->sectionnum;
         }
     }
-
-    $class = $cm->visible ? null : ['class' => 'dimmed'];
-
-    $row[] = html_writer::link(new moodle_url('view.php', ['id' => $cm->id]),
-        $cm->get_formatted_name(), $class);
-    $table->data[] = $row;
 }
 
 echo html_writer::table($table);
