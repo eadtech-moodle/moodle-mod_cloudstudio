@@ -74,7 +74,6 @@ class provider implements
             'privacy:metadata:cloudstudio_view',
             );
 
-
         return $collection;
     }
 
