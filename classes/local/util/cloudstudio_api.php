@@ -50,6 +50,7 @@ class cloudstudio_api {
      *
      * @return bool|mixed
      * @throws \dml_exception
+     * @throws \coding_exception
      */
     public static function get($metodth, $params = []) {
         $params = http_build_query($params, '', '&');
