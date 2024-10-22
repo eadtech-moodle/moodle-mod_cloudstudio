@@ -341,48 +341,6 @@ function cloudstudio_get_coursemodule_info($coursemodule) {
 }
 
 /**
- * Function cloudstudio_before_standard_html_head
- *
- * @throws dml_exception
- */
-function cloudstudio_before_footer() {
-    global $COURSE, $DB;
-
-    if ($COURSE->id == 1 || $COURSE->format != "tiles" || AJAX_SCRIPT) {
-        return;
-    }
-
-    $sql = "
-        SELECT cm.id, cm.instance
-          FROM {course_modules} cm
-          JOIN {modules}         m ON cm.module = m.id
-         WHERE cm.course = {$COURSE->id}
-           AND m.name    = 'cloudstudio'";
-    $modules = $DB->get_records_sql($sql);
-
-    $css = "";
-    foreach ($modules as $module) {
-        $cloudstudio = $DB->get_record("cloudstudio", ["id" => $module->instance]);
-        if ($cloudstudio) {
-            $result = json_decode(cloudstudio_api::get("Arquivo/{$cloudstudio->identificador}/status"));
-            if ($result) {
-                $css .= "
-                    .format-tiles-cm-list #module-{$module->id} {
-                        background: url({$result->thumb});
-                        background-size: contain;
-                        background-position: top;
-                    }
-                    .format-tiles-cm-list #module-{$module->id} .tileiconcontainer {
-                        background-color: transparent;
-                    }";
-            }
-        }
-    }
-    echo "<style>{$css}</style>";
-}
-
-
-/**
  * Function cloudstudio_extend_settings_navigation
  *
  * @param settings_navigation $settings
