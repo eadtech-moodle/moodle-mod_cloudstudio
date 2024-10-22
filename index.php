@@ -55,7 +55,7 @@ if ($usesections) {
 }
 
 if (!$cloudstudios = get_all_instances_in_course("cloudstudio", $course)) {
-    notice(get_string("thereareno", "moodle", get_string("modulenameplural", "mod_cloudstudio")), "../../course/view.php?id=$course->id");
+    notice(get_string("thereareno", "moodle", get_string("modulenameplural", "mod_cloudstudio")));
     exit;
 }
 
