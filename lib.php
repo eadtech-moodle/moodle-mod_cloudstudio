@@ -532,7 +532,7 @@ function cloudstudio_dndupload_handle($uploadinfo) {
     $data->instance = cloudstudio_add_instance($data, null);
 
     $config = get_config('cloudstudio');
-    if (isset($config->urlcloudstidio[10]) && isset($config->tokencloudstidio[10])) {
+    if (isset($config->urlcloudstidio[10]) && isset($config->token[10])) {
 
         $test = cloudstudio_dndupload_testupload('repo_upload_file');
         if (!$test['status']) {
@@ -543,7 +543,7 @@ function cloudstudio_dndupload_handle($uploadinfo) {
         $curl = new \curl();
         $curl->setopt([
             'CURLOPT_HTTPHEADER' => [
-                "Authorization: {$config->tokencloudstidio}",
+                "Authorization: {$config->token}",
             ],
         ]);
         $result = $curl->post("{$config->urlcloudstidio}api/v1/Envio", [

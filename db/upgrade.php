@@ -28,7 +28,18 @@
  * @param int $oldversion
  *
  * @return bool
+ *
+ * @throws dml_exception
+ * @throws downgrade_exception
+ * @throws upgrade_exception
  */
 function xmldb_cloudstudio_upgrade($oldversion) {
+    if ($oldversion < 2024102200) {
+        $token = get_config("cloudstudio", "tokencloudstidio");
+        set_config("token", $token, "cloudstudio");
+
+        upgrade_plugin_savepoint(true, 2024102200, 'mod', 'cloudstudio');
+    }
+
     return true;
 }

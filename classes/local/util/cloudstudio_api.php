@@ -57,16 +57,16 @@ class cloudstudio_api {
 
         $config = get_config('cloudstudio');
         $cache = \cache::make('mod_cloudstudio', 'cloudstudio_api_get');
-        if ($cache->has("{$metodth}-{$params}-{$config->tokencloudstidio}")) {
+        if ($cache->has("{$metodth}-{$params}-{$config->token}")) {
             return $cache->get("{$metodth}-{$params}");
         }
 
-        if (isset($config->urlcloudstidio[10]) && isset($config->tokencloudstidio[10])) {
+        if (isset($config->urlcloudstidio[10]) && isset($config->token[10])) {
             $curl = new \curl();
             $curl->setopt([
-                'CURLOPT_HTTPHEADER' => [
-                    "Authorization" => "{$config->tokencloudstidio}",
-                ],
+                'CURLOPT_HTTPHEADER' => array(
+                    "Authorization: {$config->token}",
+                ),
             ]);
             $result = $curl->get("{$config->urlcloudstidio}api/v1/{$metodth}?{$params}");
 

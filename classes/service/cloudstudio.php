@@ -70,7 +70,7 @@ class cloudstudio extends \external_api {
         require_capability('mod/cloudstudio:addinstance', $context);
 
         $config = get_config('cloudstudio');
-        if (isset($config->urlcloudstidio[10]) && isset($config->tokencloudstidio[10])) {
+        if (isset($config->urlcloudstidio[10]) && isset($config->token[10])) {
 
             $result = cloudstudio_api::get("Arquivo", [
                 "titulo" => $titulo,

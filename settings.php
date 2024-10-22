@@ -33,9 +33,9 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('cloudstudio/urlcloudstidio',
         $title, $description, "", PARAM_URL));
 
-    $title = get_string('tokencloudstidio', 'mod_cloudstudio');
-    $description = get_string('tokencloudstidio_desc', 'mod_cloudstudio');
-    $settings->add(new admin_setting_configtext('cloudstudio/tokencloudstidio',
+    $title = get_string('token', 'mod_cloudstudio');
+    $description = get_string('token_desc', 'mod_cloudstudio');
+    $settings->add(new admin_setting_configtext('cloudstudio/token',
         $title, $description, "", PARAM_TEXT));
 
     $title = get_string('showmapa', 'mod_cloudstudio');
