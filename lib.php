@@ -540,28 +540,18 @@ function cloudstudio_dndupload_handle($uploadinfo) {
             die();
         }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "{$config->urlcloudstidio}api/v1/Envio");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        $post = [
+        $curl = new \curl();
+        $curl->setopt([
+            'CURLOPT_HTTPHEADER' => [
+                "Authorization: {$config->tokencloudstidio}",
+            ],
+        ]);
+        $result = $curl->post("{$config->urlcloudstidio}api/v1/Envio", [
             'file' => '@' . realpath($_FILES['repo_upload_file']['tmp_name']),
             'titulo' => optional_param("title", "", PARAM_RAW),
             'descricao' => optional_param('descricao', "", PARAM_RAW),
             'identificador' => optional_param('identificador', "", PARAM_RAW),
-        ];
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: {$config->tokencloudstidio}",
         ]);
-
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        }
-        curl_close($ch);
-
         $video = json_decode($result);
 
         if (isset($video->identificador)) {
