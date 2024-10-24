@@ -60,7 +60,8 @@ class cloudstudio extends \external_api {
      * @param string $titulo
      *
      * @return array
-     * @throws \dml_exception*@throws \required_capability_exception
+     * @throws \coding_exception
+     * @throws \dml_exception *@throws \required_capability_exception
      * @throws \required_capability_exception
      */
     public static function files($path = 0, $page = 0, $titulo = "") {
@@ -68,6 +69,7 @@ class cloudstudio extends \external_api {
 
         $context = \context_user::instance($USER->id);
         require_capability('mod/cloudstudio:addinstance', $context);
+        self::validate_context($context);
 
         $config = get_config('cloudstudio');
         if (isset($config->urlcloudstidio[10]) && isset($config->token[10])) {
