@@ -25,17 +25,17 @@
 defined('MOODLE_INTERNAL') || die;
 
 $functions = [
-    'mod_cloudstudio_services_progress_save' => [
-        'classpath' => 'mod/cloudstudio/classes/service/progress.php',
-        'classname' => 'mod_cloudstudio\service\progress',
+    'mod_cloudstudio_external_progress_save' => [
+        'classpath' => 'mod/cloudstudio/classes/external/progress.php',
+        'classname' => 'mod_cloudstudio\external\progress',
         'methodname' => 'save',
         'description' => 'Save progress video.',
         'type' => 'write',
         'ajax' => true,
     ],
-    'mod_cloudstudio_services_cloudstudio_files' => [
-        'classpath' => 'mod/cloudstudio/classes/service/cloudstudio.php',
-        'classname' => 'mod_cloudstudio\service\cloudstudio',
+    'mod_cloudstudio_external_cloudstudio_files' => [
+        'classpath' => 'mod/cloudstudio/classes/external/cloudstudio.php',
+        'classname' => 'mod_cloudstudio\external\cloudstudio',
         'methodname' => 'files',
         'description' => 'Get list files.',
         'type' => 'write',

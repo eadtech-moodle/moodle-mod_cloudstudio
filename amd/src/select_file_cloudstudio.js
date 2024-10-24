@@ -3,7 +3,7 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/templates'],
         return {
             load__cloudstudio_files : function(path, page, titulo) {
                 Ajax.call([{
-                    methodname : "mod_cloudstudio_services_cloudstudio_files",
+                    methodname : "mod_cloudstudio_external_cloudstudio_files",
                     args       : {
                         path   : path,
                         page   : page,

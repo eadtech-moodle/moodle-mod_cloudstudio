@@ -129,7 +129,7 @@ define(["jquery", "core/ajax", "mod_cloudstudio/player_render"], function($, Aja
 
             if (currenttime) {
                 Ajax.call([{
-                    methodname : 'mod_cloudstudio_services_progress_save',
+                    methodname : 'mod_cloudstudio_external_progress_save',
                     args       : {
                         view_id     : progress._internal_view_id,
                         currenttime : parseInt(currenttime),

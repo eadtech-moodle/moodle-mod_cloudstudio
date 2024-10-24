@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_cloudstudio\service;
+namespace mod_cloudstudio\external;
 
 use mod_cloudstudio\local\util\cloudstudio_api;
 

@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_cloudstudio\service;
+namespace mod_cloudstudio\external;
 
 use external_function_parameters;
 use external_single_structure;
