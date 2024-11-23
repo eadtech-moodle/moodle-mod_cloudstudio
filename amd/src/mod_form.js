@@ -14,8 +14,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 define([
-    "jquery", "core/ajax", "mod_cloudstudio/player_render", "core/str", "core/modal_factory", "core/templates"
-], function($, Ajax, PlayerRender, getString, ModalFactory, Templates) {
+    "jquery", "core/ajax", "core/str", "core/modal_factory", "core/templates"
+], function($, Ajax, getString, ModalFactory, Templates) {
     return mod_form = {
         id_name                : null,
         id_identificador       : null,
