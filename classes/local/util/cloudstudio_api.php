@@ -111,12 +111,12 @@ class cloudstudio_api {
      * @return array
      */
     public static function listing($page, $pasta, $search = "", $extensions = []) {
-        $params = array(
+        $params = [
             "page" => $page,
             "pastaid" => $pasta,
             "titulo" => $search,
             "extensions" => $extensions,
-        );
+        ];
 
         $json = self::get("arquivo", $params);
         return json_decode($json);
