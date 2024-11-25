@@ -25,9 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2024112500;
+$plugin->version = 2024112501;
 $plugin->requires = 2014051200;
-$plugin->release = '1.1.9';
+$plugin->release = '1.2.0';
 $plugin->component = 'mod_cloudstudio';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [];
