@@ -33,6 +33,26 @@ namespace mod_cloudstudio\local\util;
 class cloudstudio_api {
 
     /**
+     * Function get_url
+     *
+     * @return mixed|string
+     */
+    public static function get_url() {
+        $config = get_config("cloudstudio");
+        $url = trim($config->urlcloudstidio);
+        if (!preg_match('/^https?:/', $url)) {
+            $url = "http://{$url}";
+        }
+        $url = parse_url($url, PHP_URL_HOST);
+
+        if ($url != $config->urlcloudstidio) {
+            set_config("urlcloudstidio", $url, "cloudstudio");
+        }
+
+        return $url;
+    }
+
+    /**
      * Function identificador
      *
      * @param $identificador
@@ -41,6 +61,44 @@ class cloudstudio_api {
      */
     public static function identificador($identificador) {
         return str_replace("-", "_", $identificador);
+    }
+
+    /**
+     * Call for get player code.
+     *
+     * @param int $cmid
+     * @param string $identifier
+     * @param string $safetyplayer
+     *
+     * @return string
+     * @throws \dml_exception
+     */
+    public static function getplayer($cmid, $identifier) {
+        global $USER, $CFG;
+
+        $config = get_config("cloudstudio");
+
+        $safetyplayer = "";
+        if ($config->safety && $config->safety != "none") {
+            $safety = $config->safety;
+            if (strpos($safety, "profile") === 0) {
+                $safety = str_replace("profile_", "", $safety);
+                $safetyplayer = $USER->profile->$safety;
+            } else {
+                $safetyplayer = $USER->$safety;
+            }
+        }
+
+        $payload = [
+            "identifier" => $identifier,
+            "aluno_matricula" => $cmid,
+            "aluno_nome" => fullname($USER),
+            "aluno_email" => $USER->email,
+            "safetyplayer" => $safetyplayer,
+            "referer" => $CFG->wwwroot,
+        ];
+
+        return self::get("Player/{$identifier}/html", $payload);
     }
 
     /**
@@ -69,7 +127,9 @@ class cloudstudio_api {
                     "Authorization: {$config->token}",
                 ],
             ]);
-            $result = $curl->get("{$config->urlcloudstidio}api/v1/{$metodth}?{$params}");
+
+            $url = self::get_url();
+            $result = $curl->get("https://{$url}/api/v1/{$metodth}?{$params}");
 
             $cache->set("{$metodth}-{$params}", $result);
             return $result;

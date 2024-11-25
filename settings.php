@@ -55,16 +55,16 @@ if ($ADMIN->fulltree) {
         $title, $description, 1));
 
     $itensseguranca = [
-        "none" => get_string("safety_none", "media_cloudstudio"),
-        "id" => get_string("safety_id", "media_cloudstudio"),
+        "none" => get_string("safety_none", "cloudstudio"),
+        "id" => get_string("safety_id", "cloudstudio"),
     ];
     $infofields = $DB->get_records("user_info_field");
     foreach ($infofields as $infofield) {
         $itensseguranca["profile_{$infofield->id}"] = $infofield->name;
     }
     $setting = new admin_setting_configselect("cloudstudio/safety",
-        get_string("safety_title", "media_cloudstudio"),
-        get_string("safety_desc", "media_cloudstudio"), "id",
+        get_string("safety_title", "cloudstudio"),
+        get_string("safety_desc", "cloudstudio"), "id",
         $itensseguranca
     );
     $settings->add($setting);
