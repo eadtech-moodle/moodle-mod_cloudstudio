@@ -53,4 +53,19 @@ if ($ADMIN->fulltree) {
     $description = get_string('openpopup_desc', 'mod_cloudstudio');
     $settings->add(new admin_setting_configcheckbox('cloudstudio/display_popup',
         $title, $description, 1));
+
+    $itensseguranca = [
+        "none" => get_string("safety_none", "media_cloudstudio"),
+        "id" => get_string("safety_id", "media_cloudstudio"),
+    ];
+    $infofields = $DB->get_records("user_info_field");
+    foreach ($infofields as $infofield) {
+        $itensseguranca["profile_{$infofield->id}"] = $infofield->name;
+    }
+    $setting = new admin_setting_configselect("cloudstudio/safety",
+        get_string("safety_title", "media_cloudstudio"),
+        get_string("safety_desc", "media_cloudstudio"), "id",
+        $itensseguranca
+    );
+    $settings->add($setting);
 }
