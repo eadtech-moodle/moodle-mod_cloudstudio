@@ -102,6 +102,27 @@ class cloudstudio_api {
     }
 
     /**
+     * Call for list videos in cloudstudio.
+     *
+     * @param int $page
+     * @param int $pasta
+     * @param string $titulo
+     *
+     * @return array
+     */
+    public static function listing($page, $pasta, $search = "", $extensions = []) {
+        $params = array(
+            "page" => $page,
+            "pastaid" => $pasta,
+            "titulo" => $search,
+            "extensions" => $extensions,
+        );
+
+        $json = self::get("arquivo", $params);
+        return json_decode($json);
+    }
+
+    /**
      * Function get
      *
      * @param $metodth
