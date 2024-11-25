@@ -18,8 +18,9 @@
  * Backup files
  *
  * @package   mod_cloudstudio
- * @category   backup
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @category  backup
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   https://www.eduardokraus.com/
  */
 
@@ -27,8 +28,9 @@
  * Structure step to restore one cloudstudio activity
  *
  * @package   mod_cloudstudio
- * @category   backup
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @category  backup
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   https://www.eduardokraus.com/
  */
 class restore_cloudstudio_activity_structure_step extends restore_activity_structure_step {

@@ -17,9 +17,10 @@
 /**
  * The Web service script that is called from the filepicker front end
  *
- * @package    mod_cloudstudio
- * @copyright  2009 Dongsheng Cai {@link http://dongsheng.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define('AJAX_SCRIPT', true);

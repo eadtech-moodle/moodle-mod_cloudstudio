@@ -18,13 +18,14 @@
  * version file
  *
  * @package   mod_cloudstudio
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2024102400;
+$plugin->version = 2024102401;
 $plugin->requires = 2014051200;
 $plugin->release = '1.1.8';
 $plugin->component = 'mod_cloudstudio';

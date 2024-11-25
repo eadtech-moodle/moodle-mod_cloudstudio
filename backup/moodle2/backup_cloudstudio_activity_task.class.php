@@ -18,8 +18,9 @@
  * Backup files
  *
  * @package   mod_cloudstudio
- * @category   backup
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @category  backup
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   https://www.eduardokraus.com/
  */
 
@@ -31,8 +32,9 @@ require_once($CFG->dirroot . '/mod/cloudstudio/backup/moodle2/backup_cloudstudio
  * Provides the steps to perform one complete backup of the cloudstudio instance
  *
  * @package   mod_cloudstudio
- * @category   backup
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @category  backup
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   https://www.eduardokraus.com/
  */
 class backup_cloudstudio_activity_task extends backup_activity_task {

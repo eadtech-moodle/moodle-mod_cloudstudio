@@ -18,7 +18,8 @@
  * The mod_cloudstudio instance list viewed event.
  *
  * @package   mod_cloudstudio
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,7 +29,8 @@ namespace mod_cloudstudio\event;
  * The mod_cloudstudio instance list viewed event class.
  *
  * @package   mod_cloudstudio
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {

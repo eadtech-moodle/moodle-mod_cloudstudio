@@ -22,7 +22,8 @@ use mod_cloudstudio\local\grade\grades_util;
  * Cloudstudio View implementation for mod_cloudstudio.
  *
  * @package   mod_cloudstudio
- * @copyright 2024 Eduardo Kraus {@link http://eduardokraus.com}
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cloudstudio_view {

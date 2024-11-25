@@ -17,9 +17,10 @@
 /**
  * lang file
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Eduardo kraus (http://eduardokraus.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['abortado_upload_ottflix'] = 'Upload to Cloud Studio Module was aborted!';

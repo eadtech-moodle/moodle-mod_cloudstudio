@@ -18,7 +18,8 @@
  * view file
  *
  * @package   mod_cloudstudio
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -43,7 +44,7 @@ if ($id) {
     $course = $DB->get_record('course', ['id' => $cloudstudio->course], '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('cloudstudio', $cloudstudio->id, $course->id, false, MUST_EXIST);
 } else {
-    error('You must specify a course_module ID or an instance ID');
+    throw new Exception('You must specify a course_module ID or an instance ID');
 }
 
 $secret = optional_param('secret', false, PARAM_TEXT);

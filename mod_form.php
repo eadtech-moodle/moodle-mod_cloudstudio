@@ -18,7 +18,8 @@
  * form file
  *
  * @package   mod_cloudstudio
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +31,8 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
  * class mod_cloudstudio_mod_for
  *
  * @package   mod_cloudstudio
- * @copyright 2024 Eduardo kraus (http://eduardokraus.com)
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
  * @license   https://www.eduardokraus.com/
  */
 class mod_cloudstudio_mod_form extends moodleform_mod {

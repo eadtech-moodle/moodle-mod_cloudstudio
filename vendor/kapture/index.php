@@ -12,7 +12,7 @@ require_once "config-kapture.php";
 
 
     <?php kapture_get_string_js() ?>
-    <link rel="stylesheet" href="css/style.css"><script type="text/javascript" src="all.min.js?build=214"></script>
+    <link rel="stylesheet" href="css/style.css"><script type="text/javascript" src="all.min.js?build=4"></script>
 
     
     
@@ -263,10 +263,10 @@ require_once "config-kapture.php";
 </div>
 
 <div class="mobileViewOnly">
+    <h1 class="headText"><?php echo kapture_get_string( "nao_suportado_celular" ); ?></h1>
     <img class="mobileViewImg" src="img/mobileView.png"
          alt="<?php echo kapture_get_string( "nao_suportado_celular" ); ?>"
          title="<?php echo kapture_get_string( "nao_suportado_celular" ); ?>">
-    <div class="headText"><?php echo kapture_get_string( "nao_suportado_celular" ); ?></div>
 </div>
 
 <?php echo $text; ?>

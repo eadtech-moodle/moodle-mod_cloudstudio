@@ -17,10 +17,10 @@
 /**
  * Cache definition.
  *
- * @package    mod_cloudstudio
- * @copyright  2023 Catalyst IT Ltd
- * @author     Dan Marsden <dan@danmarsden.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_cloudstudio
+ * @copyright 2024 EadTech {@link https://www.eadtech.com.br}
+ * @author    2024 Eduardo Kraus {@link https://www.eduardokraus.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
