@@ -76,6 +76,7 @@ $string['livro'] = 'Show book, if available';
 $string['livro_help'] = 'Enable and allow the student to view the book, if available.';
 $string['loading'] = 'Loading';
 $string['logo_title'] = 'Logo';
+$string['none_camera'] = 'Não usar a câmera';
 $string['mapamental'] = 'Show mind map, if available';
 $string['mapamental_help'] = 'Enable and allow the student to view the mind map, if available.';
 $string['maxwidth'] = 'Maximum Width for Video Player';
