@@ -27,6 +27,7 @@ $string['abortado_upload_ottflix'] = 'Upload to Cloud Studio Module was aborted!
 $string['app_title'] = 'Kapture Cloud Studio Module';
 $string['aprovar_permissao'] = 'Select <b><i>Allow</i></b> when your browser requests permissions.';
 $string['buscar_arquivos'] = 'Search Files';
+$string['cachedef_cloudstudio_api_get'] = 'Cache API';
 $string['camera'] = 'Camera';
 $string['camera_redonda'] = 'Round Camera';
 $string['carregando_documentos'] = 'Loading documents...';
